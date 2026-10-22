@@ -1,0 +1,84 @@
+SELECT Titulo   AS TITULO,
+       Genero   AS GENERO,
+       Preco_Tabela AS PRECO
+FROM LIVROS
+WHERE Preco_Tabela >= 30
+  AND Preco_Tabela <  40
+ORDER BY Preco_Tabela, Titulo;
+
+SELECT genero, titulo, preco_tabela FROM Livros WHERE (GENERO='Policial' or GENERO='Aventura') AND preco_tabela < 60 ORDER BY titulo DESC;
+EXEC SQLCHECK('FBMAQMQCYJCTEIV');
+
+SELECT nome, idade, morada FROM Clientes WHERE (idade>=30 AND idade<=55) AND morada LIKE '%Ovar%' order by nome;
+EXEC SQLCHECK('FBWQIZVDBVCAFPC');
+
+SELECT DISTINCT(GENERO) FROM LIVROS WHERE PAGINAS<400 AND PRECO_TABELA<15 ORDER BY GENERO;
+EXEC SQLCHECK('FBNUXWZEMHXVGPS');
+
+SELECT titulo, preco_tabela as preco FROM Livros WHERE (genero='Informática' AND (preco_tabela-preco_tabela*0.2)<20) ORDER BY preco_tabela;
+EXEC SQLCHECK('FBOPVQKFFLSBHFT');
+
+SELECT ISBN, titulo, unidades_vendidas, genero, preco_tabela FROM Livros WHERE genero = 'Informática' AND ROUND(preco_tabela) = 40 ORDER BY preco_tabela ASC, unidades_vendidas DESC;
+EXEC SQLCHECK('FBGVUEEGBUQWIMR');
+
+SELECT distinct(codigo_autor) FROM Livros WHERE genero='Drama' ORDER BY codigo_autor desc;
+EXEC SQLCHECK('FBINSVUHXFWUJBS');
+
+SELECT titulo FROM Livros WHERE genero <> 'Policial' ORDER BY preco_tabela ASC;
+EXEC SQLCHECK('FBKNEHPIHNVTKCF');
+
+SELECT titulo, isbn, preco_tabela FROM Livros WHERE preco_tabela < 20 AND NOT (genero = 'Aventura' OR genero = 'Policial') ORDER BY preco_tabela, codigo_livro;
+EXEC SQLCHECK('FBXOJCQJDATPLKK');
+
+SELECT titulo, genero, paginas FROM Livros WHERE LENGTH(titulo) > 45 ORDER BY titulo ASC;
+EXEC SQLCHECK('FBGLEVDKEVHYMKI');
+
+SELECT nome, data_nascimento FROM Autores WHERE nome LIKE '%o%' AND nome LIKE '%u%' ORDER BY data_nascimento ASC;
+EXEC SQLCHECK('FBCFQVVLPDNKNAG');
+
+SELECT titulo, genero FROM Livros WHERE (titulo LIKE 'O%' AND titulo LIKE '%st%') OR (titulo LIKE 'R%' AND titulo LIKE '%eng%') ORDER BY preco_tabela;
+EXEC SQLCHECK('FBNNKNZMBKPHOBT');
+
+SELECT titulo, genero, preco_tabela FROM Livros WHERE titulo LIKE 'A%' AND NOT (genero = 'Policial' OR genero = 'Romance' OR genero = 'Drama') ORDER BY titulo ASC;
+EXEC SQLCHECK('FBOTLBXNGHKSPCE');
+
+SELECT titulo, paginas as "Num de Paginas", ROUND(preco_tabela / paginas, 2) AS "Preco por página" FROM Livros WHERE genero = 'Drama' AND paginas > 100 ORDER BY paginas;
+EXEC SQLCHECK('FBVLIMIOEUBZQBM');
+
+SELECT codigo_livro, titulo, preco_tabela, ROUND(unidades_vendidas / 900, 0) AS "Media por loja" FROM Livros WHERE genero = 'Policial' ORDER BY titulo;
+EXEC SQLCHECK('FBKLVQAPRJNDRTD');
+
+SELECT 'O livro "' || titulo || '" com ' || paginas || ' paginas, foi escrito pelo autor com o codigo ' || codigo_autor AS "Listagem paginas dos Livros" FROM Livros WHERE genero = 'Aventura' AND preco_tabela > 50 order by titulo;
+EXEC SQLCHECK('FBYCFSOQGLQYSFT');
+
+select L.titulo, A.morada 
+from Livros L join autores A 
+ON L.Codigo_autor = A.Codigo_Autor 
+where A.morada like '%Portalegre%' And L.Genero='Aventura' 
+order by titulo;
+EXEC SQLCHECK('FCDOVORDVBDYGYC');
+
+SELECT DISTINCT A.Nome, TO_CHAR(A.Data_Nascimento, 'YYYY') AS Ano_de_Nascimento
+FROM AUTORES A
+JOIN LIVROS L ON A.Codigo_Autor = L.Codigo_Autor
+WHERE A.Genero_Preferido = L.Genero
+ORDER BY Ano_de_Nascimento, A.Nome;
+EXEC SQLCHECK('FCZNODMEIXEJHZJ');
+
+SELECT DISTINCT
+    L.titulo,
+    L.genero,
+    L.preco_tabela
+FROM
+    Livros L
+JOIN
+    Contem CO ON L.codigo_livro = CO.codigo_livro  -- Liga Livros à tabela de associação
+JOIN
+    Vendas V ON CO.codigo_venda = V.codigo_venda  -- Liga a tabela de associação à Venda
+JOIN
+    Clientes C ON V.codigo_cliente = C.codigo_cliente  -- Liga a Venda ao Cliente
+WHERE
+    C.morada LIKE '%Lisboa%'
+ORDER BY
+    L.titulo ASC;
+    EXEC SQLCHECK('FCRBLZVFBDUWIVB');

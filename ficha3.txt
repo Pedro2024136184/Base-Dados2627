@@ -1,0 +1,126 @@
+SELECT Nome AS "Nome completo",
+       FLOOR(MONTHS_BETWEEN(SYSDATE, Data_Nascimento) / 12) AS IDADE
+FROM AUTORES
+WHERE UPPER(Nome) LIKE '%RAMOS%'
+ORDER BY Data_Nascimento;
+EXEC SQLCHECK('FCUSADAGIOXZJUN');
+
+SELECT A.Nome, A.Genero_Preferido, L.Titulo, L.Genero, L.Preco_Tabela AS "PRECO_TABELA"
+FROM AUTORES A
+JOIN LIVROS L ON A.Codigo_Autor = L.Codigo_Autor
+WHERE L.Preco_Tabela > 70
+  AND L.Genero != A.Genero_Preferido
+ORDER BY A.Nome, L.Titulo;
+EXEC SQLCHECK('FCMCECYHVMWOKFI');
+
+SELECT Titulo, Preco_Tabela, Unidades_Vendidas,
+       ROUND(Preco_Tabela * 0.05 * Unidades_Vendidas, 2) AS "Rendeu"
+FROM LIVROS
+ORDER BY Titulo;
+EXEC SQLCHECK('FCFFKUCICKZULQR');
+
+SELECT Titulo, TRUNC(Preco_Tabela * 0.30 * Unidades_Vendidas) AS "Rendimento"
+FROM LIVROS
+WHERE (Preco_Tabela * 0.30 * Unidades_Vendidas) > 12000
+ORDER BY Genero, Preco_Tabela;
+EXEC SQLCHECK('FCIIBDCJGDETMIH');
+
+SELECT Titulo,
+       ROUND(Preco_Tabela / Paginas, 2) AS "Custo página",
+       CEIL(Preco_Tabela / Paginas) AS "Custo pág.(sup)",
+       FLOOR(Preco_Tabela / Paginas) AS "Custo pág.(inf)"
+FROM LIVROS
+WHERE Paginas BETWEEN 200 AND 500
+ORDER BY Titulo;
+EXEC SQLCHECK('FCNKGLCKMQQWNEE');
+
+SELECT UPPER(Titulo) AS "Titulo (em maisculas)",
+       LOWER(Titulo) AS "Titulo (em minusculas)", 
+       INITCAP(Titulo) AS "Titulo (1a letra maiúscula)"
+FROM LIVROS
+WHERE Codigo_Editora IS NOT NULL
+ORDER BY Titulo;
+EXEC SQLCHECK('FCKTZWWLBVZOOAW');
+SELECT Titulo AS "Titulo", Paginas, Preco_Tabela
+FROM LIVROS
+WHERE UPPER(Genero) = 'DRAMA'
+  AND Paginas > 200
+ORDER BY Paginas;
+EXEC SQLCHECK('FCLGQSUMWLNVPWM');
+SELECT Nome AS "Nome completo",
+       SUBSTR(Nome, 1, INSTR(Nome || ' ', ' ') - 1) AS "Primeiro Nome",
+       TRIM(SUBSTR(Nome, INSTR(Nome, ' ', -1) + 1)) AS "Ultimo Nome"
+FROM AUTORES
+WHERE (SYSDATE - Data_Nascimento) / 365 > 35
+ORDER BY Data_Nascimento;
+EXEC SQLCHECK('FCOTEJMNNRLTQKF');
+SELECT UPPER(L.Titulo) AS "Titulo (em maisculas)",
+       LOWER(L.Genero) AS "genero (min.)",
+       INITCAP(A.Nome) AS "Nome Autor (1a letra)"
+FROM LIVROS L
+JOIN AUTORES A ON L.Codigo_Autor = A.Codigo_Autor
+JOIN EDITORAS E ON L.Codigo_Editora = E.Codigo_Editora
+WHERE E.Nome = 'Dom Quixote'
+  AND L.Paginas > 100
+ORDER BY L.Titulo DESC;
+EXEC SQLCHECK('FCWYJKCOZCBERIZ');
+SELECT Titulo, Genero
+FROM LIVROS
+WHERE LENGTH(Titulo) > 30
+AND UPPER(Titulo) LIKE '%POWER%'
+ORDER BY Titulo;
+EXEC SQLCHECK('FCSEATCPOBCXSOT');
+SELECT Titulo,
+       Preco_Tabela AS PRECO,
+       ROUND(Preco_Tabela * 1.06, 1) AS PRECO_COM_AUMENTO
+FROM LIVROS
+WHERE UPPER(Genero) = 'DRAMA'
+  AND (Preco_Tabela * 0.06) > 2
+ORDER BY Titulo;
+EXEC SQLCHECK('FCRFKISQBNSNTCC');
+SELECT DISTINCT A.Nome, TO_CHAR(A.Data_Nascimento, 'YYYY') AS Ano_de_Nascimento
+FROM AUTORES A
+JOIN LIVROS L ON A.Codigo_Autor = L.Codigo_Autor
+WHERE A.Genero_Preferido = L.Genero
+ORDER BY Ano_de_Nascimento, A.Nome;
+EXEC SQLCHECK('FCZNODMEIXEJHZJ');
+SELECT DISTINCT
+    L.titulo,
+    L.genero,
+    L.preco_tabela
+FROM
+    Livros L
+JOIN
+    Contem CO ON L.codigo_livro = CO.codigo_livro  -- Liga Livros à tabela de associação
+JOIN
+    Vendas V ON CO.codigo_venda = V.codigo_venda  -- Liga a tabela de associação à Venda
+JOIN
+    Clientes C ON V.codigo_cliente = C.codigo_cliente  -- Liga a Venda ao Cliente
+WHERE
+    C.morada LIKE '%Lisboa%'
+ORDER BY
+    L.titulo ASC;
+    EXEC SQLCHECK('FCRBLZVFBDUWIVB');
+SELECT
+  CAST(a.nome AS VARCHAR2(200)) AS NOME,
+  CAST(FLOOR(MONTHS_BETWEEN(TRUNC(SYSDATE), TRUNC(a.data_nascimento)) / 12) AS VARCHAR2(3)) AS IDADE
+FROM autores a
+WHERE REGEXP_LIKE(a.nome, 'ramos', 'i')   -- “RAMOS” case-insensitive
+ORDER BY a.data_nascimento, a.nome;
+SELECT
+
+
+
+    nome as "Nome completo", TRUNC(MONTHS_BETWEEN(SYSDATE, data_nascimento) / 12) AS IDADE
+
+FROM
+
+    Autores
+
+WHERE
+
+    UPPER(nome) LIKE '%RAMOS%'
+
+ORDER BY
+
+    data_nascimento;
