@@ -24,6 +24,8 @@ BD27/
 ### 1. `Apontamentos/`
 - **`Apontamentos_BD_...pdf`**: Apontamentos globais e notas teóricas da matéria.
 - **`resumo_sintaxe_oracle_sql.md`**: Guia rápido de sintaxe Oracle SQL (DML, DDL, funções, junções, operadores e exemplos).
+- **`Exercicios ER - BrunoTeixeira1996.pdf`**: Exercícios de Modelação Entidade-Relacionamento com resoluções explicadas.
+- **`Exercicios-Fn-Bruno.pdf`**: Exercícios sobre Formas Normais (Normalização de BD).
 
 ### 2. `Esquema_Livraria/`
 Esquema da Base de Dados da **Livraria** utilizado na generalidade das fichas práticas:
