@@ -1,0 +1,50 @@
+-- =============================================================================
+-- TESTE SQL 2023/2024 - RESOLUÇÃO
+-- Ficheiro correspondente ao enunciado: 202324_SQL_v1.04_PT_Final.pdf
+-- =============================================================================
+
+-- -----------------------------------------------------------------------------
+-- PERGUNTA 1
+-- -----------------------------------------------------------------------------
+SELECT c.name AS "Nome Cliente",
+       c.nif AS "Nif",
+       p.phoneNumber AS "PHONENUMBER",
+       pc.destPhoneNumber AS "DESTPHONENUMBER"
+FROM contract c
+JOIN phone p ON c.idContract = p.idContract
+JOIN phonecall pc ON p.idPhone = pc.idPhone
+WHERE UPPER(c.address) LIKE '%COIMBRA'
+  AND pc.duration > 2
+  AND TO_CHAR(pc.callDate, 'MM-YYYY') = '11-2023'
+  AND pc.destPhoneNumber IN (
+      SELECT p2.phoneNumber
+      FROM phone p2
+      JOIN contract c2 ON p2.idContract = c2.idContract
+      WHERE UPPER(c2.name) = 'JOSÉ GONÇALVES'
+  )
+ORDER BY c.name ASC;
+
+
+-- -----------------------------------------------------------------------------
+-- PERGUNTA 2
+-- -----------------------------------------------------------------------------
+SELECT c.name AS "Nome Cliente",
+       TO_CHAR(pc.callDate, 'YYYY-MM') AS "ANO_MES",
+       COUNT(*) AS "NUM_CHAMADAS",
+       SUM(pc.duration) AS "NUM_TOTAL_MINUTOS"
+FROM CONTRACT c
+JOIN PHONE p ON c.idContract = p.idContract
+JOIN PHONECALL pc ON p.idPhone = pc.idPhone
+WHERE TO_CHAR(c.startDate, 'YYYY') = '2022'
+  AND TO_CHAR(pc.callDate, 'YYYY') = '2022'
+  AND pc.duration > 2
+GROUP BY c.name, TO_CHAR(pc.callDate, 'YYYY-MM')
+HAVING COUNT(*) >= 5 
+   AND SUM(pc.duration) >= 100
+ORDER BY "NUM_CHAMADAS" DESC, "NUM_TOTAL_MINUTOS" ASC;
+
+
+-- -----------------------------------------------------------------------------
+-- PERGUNTA 3
+-- -----------------------------------------------------------------------------
+-- Em resolução

@@ -1,3 +1,9 @@
+-- =============================================================================
+-- FICHA 3 (SQL - EMP/DEP) - CONSULTAS E JOINS
+-- Base de Dados - ISEC / DEIS 2026/2027
+-- Esquema utilizado: Script_TP_PT_moodle.sql (Tabelas EMP, DEP, DESCONTOS)
+-- =============================================================================
+
 SELECT *
 FROM EMP
 WHERE SAL > 3000;

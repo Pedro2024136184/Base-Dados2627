@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<title>Exercício 1 - Sistema de Identificação de Veículos</title>
+<style>
+  @page { size: A4 portrait; margin: 16mm 14mm; }
+  body { font-family: 'Liberation Sans', Arial, sans-serif; font-size: 11pt; line-height: 1.45; color: #1e293b; }
+  h1 { color: #0f172a; font-size: 19pt; border-bottom: 2.5px solid #2563eb; padding-bottom: 6px; margin-top: 0; }
+  h2 { color: #1e3a8a; font-size: 13.5pt; border-bottom: 1.5px solid #93c5fd; padding-bottom: 4px; margin-top: 18px; margin-bottom: 10px; }
+  h3 { color: #1d4ed8; font-size: 11.5pt; margin-top: 14px; margin-bottom: 6px; }
+  .box { background: #f8fafc; border-left: 4.5px solid #2563eb; padding: 10px 14px; margin: 12px 0; border-radius: 0 5px 5px 0; font-size: 10pt; }
+  .box-ref { background: #eff6ff; border-left: 4.5px solid #3b82f6; padding: 10px 14px; margin: 12px 0; border-radius: 0 5px 5px 0; font-size: 10pt; }
+  .box p { margin: 4px 0; }
+  .schema-box { background: #f1f5f9; border: 1.5px solid #cbd5e1; border-radius: 6px; padding: 12px; margin: 12px 0; font-family: 'Liberation Mono', monospace; font-size: 10.5pt; }
+  .pk { text-decoration: underline; font-weight: bold; }
+  .fk { color: #b91c1c; font-style: italic; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 10pt; }
+  th, td { border: 1px solid #cbd5e1; padding: 7px 10px; text-align: left; }
+  th { background-color: #e2e8f0; color: #0f172a; font-weight: bold; }
+  tr:nth-child(even) { background-color: #f8fafc; }
+  pre { background: #0f172a; color: #f8fafc; padding: 10px 14px; border-radius: 5px; font-size: 9.5pt; line-height: 1.4; overflow-x: auto; font-family: 'Liberation Mono', monospace; }
+  .diagram-container { text-align: center; margin: 14px 0; page-break-inside: avoid; }
+  svg { max-width: 100%; height: auto; }
+  .page-break { page-break-after: always; }
+</style>
+</head>
+<body>
+
+<h1>Bases de Dados: Exercício 1 &mdash; Identificação de Veículos</h1>
+<p><strong>Unidade Curricular:</strong> Bases de Dados &bull; <strong>Modelo:</strong> Notação de Chen e Regras de Transformação</p>
+
+<div class="box">
+  <strong>Enunciado:</strong><br>
+  Num sistema de identificação de veículos, um proprietário pode possuir mais do que um veículo e um veículo pode ser propriedade de mais do que um proprietário. Os veículos são identificados pela respetiva matrícula e são caracterizados pela marca, modelo e cor. Os proprietários são identificados pelo número de contribuinte e possuem ainda nome, morada, data de nascimento e sexo. Os veículos possuem obrigatoriamente um só motor o qual é identificado pelo número de motor e é caracterizado ainda pela cilindrada e tipo de combustível.
+</div>
+
+<h2>1. Identificação de Entidades, Atributos e Chaves</h2>
+<table>
+  <tr>
+    <th>Entidade</th>
+    <th>Chave Primária (PK)</th>
+    <th>Atributos Descritivos</th>
+    <th>Descrição / Papel</th>
+  </tr>
+  <tr>
+    <td><strong>Proprietario</strong></td>
+    <td><span class="pk">NIF</span> (Número de Contribuinte)</td>
+    <td>Nome, Morada, Data_Nascimento, Sexo</td>
+    <td>Pessoa individual registada no sistema.</td>
+  </tr>
+  <tr>
+    <td><strong>Veiculo</strong></td>
+    <td><span class="pk">Matricula</span></td>
+    <td>Marca, Modelo, Cor</td>
+    <td>Veículo automóvel registado.</td>
+  </tr>
+  <tr>
+    <td><strong>Motor</strong></td>
+    <td><span class="pk">Numero_Motor</span></td>
+    <td>Cilindrada, Tipo_Combustivel</td>
+    <td>Unidade de propulsão associada obrigatoriamente a um veículo.</td>
+  </tr>
+</table>
+
+<h2>2. Diagrama de Ocorrências</h2>
+<div class="diagram-container">
+<svg viewBox="0 0 760 210" width="760" height="210" xmlns="http://www.w3.org/2000/svg">
+  <rect width="760" height="210" fill="#f8fafc" rx="8" stroke="#cbd5e1" stroke-width="1.5"/>
+  
+  <!-- Relacionamento 1:1 Veiculo - Motor -->
+  <text x="175" y="28" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1e3a8a" text-anchor="middle">Relacionamento 1:1 (Veículo &ndash; Motor)</text>
+  <text x="175" y="44" font-family="sans-serif" font-size="10.5" fill="#64748b" text-anchor="middle">Participação obrigatória em Veículo</text>
+  
+  <rect x="45" y="55" width="100" height="135" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5" rx="5"/>
+  <text x="95" y="75" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1e40af" text-anchor="middle">Veiculo</text>
+  <circle cx="135" cy="98" r="4" fill="#1d4ed8"/> <text x="60" y="102" font-family="sans-serif" font-size="10" fill="#1e293b">V1 (00-AA-01)</text>
+  <circle cx="135" cy="128" r="4" fill="#1d4ed8"/> <text x="60" y="132" font-family="sans-serif" font-size="10" fill="#1e293b">V2 (11-BB-02)</text>
+  <circle cx="135" cy="158" r="4" fill="#1d4ed8"/> <text x="60" y="162" font-family="sans-serif" font-size="10" fill="#1e293b">V3 (22-CC-03)</text>
+  
+  <rect x="215" y="55" width="100" height="135" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5" rx="5"/>
+  <text x="265" y="75" font-family="sans-serif" font-size="11" font-weight="bold" fill="#15803d" text-anchor="middle">Motor</text>
+  <circle cx="225" cy="98" r="4" fill="#16a34a"/> <text x="240" y="102" font-family="sans-serif" font-size="10" fill="#1e293b">M1 (MOT-1)</text>
+  <circle cx="225" cy="128" r="4" fill="#16a34a"/> <text x="240" y="132" font-family="sans-serif" font-size="10" fill="#1e293b">M2 (MOT-2)</text>
+  <circle cx="225" cy="158" r="4" fill="#16a34a"/> <text x="240" y="162" font-family="sans-serif" font-size="10" fill="#1e293b">M3 (MOT-3)</text>
+  
+  <!-- Linhas 1:1 -->
+  <line x1="135" y1="98" x2="225" y2="98" stroke="#0f172a" stroke-width="1.8"/>
+  <line x1="135" y1="128" x2="225" y2="128" stroke="#0f172a" stroke-width="1.8"/>
+  <line x1="135" y1="158" x2="225" y2="158" stroke="#0f172a" stroke-width="1.8"/>
+  
+  <!-- Divisória -->
+  <line x1="375" y1="20" x2="375" y2="195" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4"/>
+  
+  <!-- Relacionamento M:N Proprietario - Veiculo -->
+  <text x="565" y="28" font-family="sans-serif" font-size="13" font-weight="bold" fill="#1e3a8a" text-anchor="middle">Relacionamento M:N (Proprietário &ndash; Veículo)</text>
+  <text x="565" y="44" font-family="sans-serif" font-size="10.5" fill="#64748b" text-anchor="middle">Vários veículos por dono / Compropriedade</text>
+  
+  <rect x="435" y="55" width="100" height="135" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5" rx="5"/>
+  <text x="485" y="75" font-family="sans-serif" font-size="11" font-weight="bold" fill="#b45309" text-anchor="middle">Proprietario</text>
+  <circle cx="525" cy="98" r="4" fill="#d97706"/> <text x="450" y="102" font-family="sans-serif" font-size="10" fill="#1e293b">P1 (Dono 1)</text>
+  <circle cx="525" cy="128" r="4" fill="#d97706"/> <text x="450" y="132" font-family="sans-serif" font-size="10" fill="#1e293b">P2 (Dono 2)</text>
+  <circle cx="525" cy="158" r="4" fill="#d97706"/> <text x="450" y="162" font-family="sans-serif" font-size="10" fill="#1e293b">P3 (Dono 3)</text>
+  
+  <rect x="615" y="55" width="100" height="135" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5" rx="5"/>
+  <text x="665" y="75" font-family="sans-serif" font-size="11" font-weight="bold" fill="#1e40af" text-anchor="middle">Veiculo</text>
+  <circle cx="625" cy="98" r="4" fill="#1d4ed8"/> <text x="640" y="102" font-family="sans-serif" font-size="10" fill="#1e293b">V1 (00-AA-01)</text>
+  <circle cx="625" cy="128" r="4" fill="#1d4ed8"/> <text x="640" y="132" font-family="sans-serif" font-size="10" fill="#1e293b">V2 (11-BB-02)</text>
+  <circle cx="625" cy="158" r="4" fill="#1d4ed8"/> <text x="640" y="162" font-family="sans-serif" font-size="10" fill="#1e293b">V3 (22-CC-03)</text>
+  
+  <!-- Linhas M:N -->
+  <line x1="525" y1="98" x2="625" y2="98" stroke="#0f172a" stroke-width="1.8"/>
+  <line x1="525" y1="98" x2="625" y2="128" stroke="#0f172a" stroke-width="1.8"/>
+  <line x1="525" y1="128" x2="625" y2="128" stroke="#0f172a" stroke-width="1.8"/>
+  <line x1="525" y1="158" x2="625" y2="158" stroke="#0f172a" stroke-width="1.8"/>
+</svg>
+</div>
+
+<div class="page-break"></div>
+
+<h2>3. Diagrama Entidade-Relacionamento (Notação de Chen)</h2>
+<p>O diagrama cumpre integralmente a notação de Peter Chen lecionada em <code>(BD2627)T02_ER_Part1.pdf</code> (Diapositivos 7 a 16): retângulos para entidades, losangos para relacionamentos, elipses para atributos (com chaves primárias sublinhadas), indicação explícita dos graus ($, $, $, $) e <strong>linha dupla</strong> para assinalar a participação obrigatória de <code>Veiculo</code> no relacionamento com <code>Motor</code>.</p>
+
+<div class="diagram-container">
+<svg viewBox="0 0 760 490" width="760" height="490" xmlns="http://www.w3.org/2000/svg">
+  <!-- Estilos SVG -->
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="1.5" dy="1.5" stdDeviation="2" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <!-- ENTIDADE: PROPRIETARIO -->
+  <rect x="300" y="65" width="160" height="45" rx="4" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2" filter="url(#shadow)"/>
+  <text x="380" y="93" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1e3a8a" text-anchor="middle">PROPRIETARIO</text>
+  
+  <!-- Atributos PROPRIETARIO -->
+  <!-- NIF (PK) -->
+  <ellipse cx="190" cy="40" rx="48" ry="18" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.8"/>
+  <text x="190" y="44" font-family="sans-serif" font-size="11" font-weight="bold" text-decoration="underline" fill="#854d0e" text-anchor="middle">NIF</text>
+  <line x1="235" y1="48" x2="305" y2="75" stroke="#64748b" stroke-width="1.3"/>
+  
+  <!-- Nome -->
+  <ellipse cx="300" cy="22" rx="45" ry="16" fill="#ffffff" stroke="#64748b" stroke-width="1.4"/>
+  <text x="300" y="26" font-family="sans-serif" font-size="10.5" fill="#1e293b" text-anchor="middle">Nome</text>
+  <line x1="315" y1="38" x2="350" y2="65" stroke="#64748b" stroke-width="1.3"/>
+  
+  <!-- Morada -->
+  <ellipse cx="440" cy="22" rx="45" ry="16" fill="#ffffff" stroke="#64748b" stroke-width="1.4"/>
+  <text x="440" y="26" font-family="sans-serif" font-size="10.5" fill="#1e293b" text-anchor="middle">Morada</text>
+  <line x1="430" y1="38" x2="410" y2="65" stroke="#64748b" stroke-width="1.3"/>
+
+  <!-- Data_Nascimento -->
+  <ellipse cx="555" cy="42" rx="60" ry="17" fill="#ffffff" stroke="#64748b" stroke-width="1.4"/>
+  <text x="555" y="46" font-family="sans-serif" font-size="10" fill="#1e293b" text-anchor="middle">Data_Nascimento</text>
+  <line x1="510" y1="52" x2="450" y2="75" stroke="#64748b" stroke-width="1.3"/>
+
+  <!-- Sexo -->
+  <ellipse cx="565" cy="90" rx="35" ry="16" fill="#ffffff" stroke="#64748b" stroke-width="1.4"/>
+  <text x="565" y="94" font-family="sans-serif" font-size="10.5" fill="#1e293b" text-anchor="middle">Sexo</text>
+  <line x1="530" y1="90" x2="460" y2="90" stroke="#64748b" stroke-width="1.3"/>
+
+  <!-- RELACIONAMENTO: Possui (M:N) -->
+  <polygon points="380,145 440,175 380,205 320,175" fill="#fef3c7" stroke="#d97706" stroke-width="2" filter="url(#shadow)"/>
+  <text x="380" y="180" font-family="sans-serif" font-size="12" font-weight="bold" fill="#92400e" text-anchor="middle">Possui</text>
+  
+  <!-- Ligação PROPRIETARIO - Possui -->
+  <line x1="380" y1="110" x2="380" y2="145" stroke="#0f172a" stroke-width="1.8"/>
+  <text x="392" y="130" font-family="sans-serif" font-size="13" font-weight="bold" fill="#0f172a">M</text>
+
+  <!-- Ligação Possui - VEICULO -->
+  <line x1="380" y1="205" x2="380" y2="245" stroke="#0f172a" stroke-width="1.8"/>
+  <text x="392" y="230" font-family="sans-serif" font-size="13" font-weight="bold" fill="#0f172a">N</text>
+
+  <!-- ENTIDADE: VEICULO -->
+  <rect x="300" y="245" width="160" height="45" rx="4" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2" filter="url(#shadow)"/>
+  <text x="380" y="273" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1e3a8a" text-anchor="middle">VEICULO</text>
+
+  <!-- Atributos VEICULO -->
+  <!-- Matricula (PK) -->
+  <ellipse cx="185" cy="245" rx="55" ry="18" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.8"/>
+  <text x="185" y="249" font-family="sans-serif" font-size="11" font-weight="bold" text-decoration="underline" fill="#854d0e" text-anchor="middle">Matricula</text>
+  <line x1="240" y1="250" x2="300" y2="260" stroke="#64748b" stroke-width="1.3"/>
+
+  <!-- Marca -->
+  <ellipse cx="185" cy="290" rx="45" ry="16" fill="#ffffff" stroke="#64748b" stroke-width="1.4"/>
+  <text x="185" y="294" font-family="sans-serif" font-size="10.5" fill="#1e293b" text-anchor="middle">Marca</text>
+  <line x1="230" y1="285" x2="300" y2="275" stroke="#64748b" stroke-width="1.3"/>
+
+  <!-- Modelo -->
+  <ellipse cx="555" cy="245" rx="45" ry="16" fill="#ffffff" stroke="#64748b" stroke-width="1.4"/>
+  <text x="555" y="249" font-family="sans-serif" font-size="10.5" fill="#1e293b" text-anchor="middle">Modelo</text>
+  <line x1="510" y1="250" x2="460" y2="260" stroke="#64748b" stroke-width="1.3"/>
+
+  <!-- Cor -->
+  <ellipse cx="555" cy="290" rx="35" ry="16" fill="#ffffff" stroke="#64748b" stroke-width="1.4"/>
+  <text x="555" y="294" font-family="sans-serif" font-size="10.5" fill="#1e293b" text-anchor="middle">Cor</text>
+  <line x1="520" y1="285" x2="460" y2="275" stroke="#64748b" stroke-width="1.3"/>
+
+  <!-- RELACIONAMENTO: Tem (1:1) -->
+  <polygon points="380,325 435,355 380,385 325,355" fill="#dcfce7" stroke="#16a34a" stroke-width="2" filter="url(#shadow)"/>
+  <text x="380" y="360" font-family="sans-serif" font-size="12" font-weight="bold" fill="#14532d" text-anchor="middle">Tem</text>
+
+  <!-- Ligação VEICULO - Tem (LINHA DUPLA: PARTICIPAÇÃO OBRIGATÓRIA) -->
+  <line x1="377" y1="290" x2="377" y2="325" stroke="#0f172a" stroke-width="2"/>
+  <line x1="383" y1="290" x2="383" y2="325" stroke="#0f172a" stroke-width="2"/>
+  <text x="395" y="312" font-family="sans-serif" font-size="13" font-weight="bold" fill="#0f172a">1</text>
+  <text x="425" y="308" font-family="sans-serif" font-size="9" font-style="italic" fill="#b91c1c">(Obrigatória)</text>
+
+  <!-- Ligação Tem - MOTOR (LINHA SIMPLES) -->
+  <line x1="380" y1="385" x2="380" y2="420" stroke="#0f172a" stroke-width="1.8"/>
+  <text x="392" y="408" font-family="sans-serif" font-size="13" font-weight="bold" fill="#0f172a">1</text>
+
+  <!-- ENTIDADE: MOTOR -->
+  <rect x="300" y="420" width="160" height="45" rx="4" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2" filter="url(#shadow)"/>
+  <text x="380" y="448" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1e3a8a" text-anchor="middle">MOTOR</text>
+
+  <!-- Atributos MOTOR -->
+  <!-- Numero_Motor (PK) -->
+  <ellipse cx="170" cy="440" rx="65" ry="18" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.8"/>
+  <text x="170" y="444" font-family="sans-serif" font-size="10.5" font-weight="bold" text-decoration="underline" fill="#854d0e" text-anchor="middle">Numero_Motor</text>
+  <line x1="235" y1="442" x2="300" y2="442" stroke="#64748b" stroke-width="1.3"/>
+
+  <!-- Cilindrada -->
+  <ellipse cx="555" cy="420" rx="48" ry="16" fill="#ffffff" stroke="#64748b" stroke-width="1.4"/>
+  <text x="555" y="424" font-family="sans-serif" font-size="10.5" fill="#1e293b" text-anchor="middle">Cilindrada</text>
+  <line x1="507" y1="425" x2="460" y2="435" stroke="#64748b" stroke-width="1.3"/>
+
+  <!-- Tipo_Combustivel -->
+  <ellipse cx="565" cy="465" rx="65" ry="17" fill="#ffffff" stroke="#64748b" stroke-width="1.4"/>
+  <text x="565" y="469" font-family="sans-serif" font-size="10" fill="#1e293b" text-anchor="middle">Tipo_Combustivel</text>
+  <line x1="502" y1="458" x2="460" y2="450" stroke="#64748b" stroke-width="1.3"/>
+</svg>
+</div>
+
+<h2>4. Modelo Físico / Esquema Relacional</h2>
+<div class="schema-box">
+  <strong>Proprietario</strong> (<span class="pk">NIF</span>, Nome, Morada, Data_Nascimento, Sexo)<br><br>
+  <strong>Motor</strong> (<span class="pk">Numero_Motor</span>, Cilindrada, Tipo_Combustivel)<br><br>
+  <strong>Veiculo</strong> (<span class="pk">Matricula</span>, Marca, Modelo, Cor, Numero_Motor)<br>
+  &nbsp;&nbsp;&bull; <span class="fk">Numero_Motor</span>: Chave forasteira (FK) de <em>Motor</em> (NOT NULL, UNIQUE)<br><br>
+  <strong>Proprietario_Veiculo</strong> (<span class="pk">NIF</span>, <span class="pk">Matricula</span>)<br>
+  &nbsp;&nbsp;&bull; <span class="fk">NIF</span>: Chave forasteira (FK) de <em>Proprietario</em><br>
+  &nbsp;&nbsp;&bull; <span class="fk">Matricula</span>: Chave forasteira (FK) de <em>Veiculo</em>
+</div>
+
+<h2>5. Justificação Teórica com Referências aos Acetatos da Cadeira</h2>
+<div class="box-ref">
+  <strong>1. Relação Veículo &ndash; Motor (Grau 1:1 e Participação Obrigatória de Veículo):</strong><br>
+  &bull; <strong>Acetato:</strong> <code>(BD2627)T02_ER_Part1.pdf</code> &bull; <strong>Diapositivo 16 / Slide 32</strong>: <em>Caso 2 (1:1) &ndash; Regra 2</em>.<br>
+  &bull; <strong>Regra 2 da Teórica:</strong> <em>&laquo;São necessárias duas tabelas, uma para cada entidade; A chave primária de cada entidade serve de chave primária na tabela correspondente; A chave primária da entidade com participação não obrigatória tem de ser usada como atributo na tabela correspondente à entidade cuja participação é obrigatória.&raquo;</em><br>
+  &bull; <strong>Aplicação:</strong> Dado que o enunciado impõe que <em>&laquo;Os veículos possuem obrigatoriamente um só motor&raquo;</em>, a chave primária de <code>Motor</code> (<code>Numero_Motor</code>) passa para a tabela <code>Veiculo</code> como chave forasteira com restrição <code>NOT NULL</code> (assegura obrigatoriedade) e <code>UNIQUE</code> (assegura o grau 1:1 sem valores nulos).<br><br>
+
+  <strong>2. Relação Proprietário &ndash; Veículo (Grau M:N):</strong><br>
+  &bull; <strong>Acetato:</strong> <code>(BD2627)T02_ER_Part1.pdf</code> &bull; <strong>Diapositivo 25 / Slide 50</strong>: <em>Regra 6 &ndash; Grau M:N</em>.<br>
+  &bull; <strong>Regra 6 da Teórica:</strong> <em>&laquo;São sempre necessárias três tabelas, uma para cada entidade e uma terceira para o relacionamento; A chave própria de cada entidade serve de chave primária na tabela correspondente; A tabela relativa ao relacionamento terá de ter entre os atributos da sua chave primária, as chaves primárias de cada uma das entidades.&raquo;</em><br>
+  &bull; <strong>Aplicação:</strong> Um proprietário pode possuir vários veículos e um veículo pode ter múltiplos proprietários (compropriedade). Cria-se obrigatoriamente a tabela de relacionamento <code>Proprietario_Veiculo</code> com chave primária composta <code>(NIF, Matricula)</code>.
+</div>
+
+<h2>6. Implementação SQL (DDL)</h2>
+<pre>
+CREATE TABLE Motor (
+    Numero_Motor VARCHAR(50) PRIMARY KEY,
+    Cilindrada INT NOT NULL,
+    Tipo_Combustivel VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE Veiculo (
+    Matricula VARCHAR(20) PRIMARY KEY,
+    Marca VARCHAR(50) NOT NULL,
+    Modelo VARCHAR(50) NOT NULL,
+    Cor VARCHAR(30) NOT NULL,
+    Numero_Motor VARCHAR(50) NOT NULL UNIQUE,
+    CONSTRAINT FK_Veiculo_Motor FOREIGN KEY (Numero_Motor) 
+        REFERENCES Motor(Numero_Motor)
+);
+
+CREATE TABLE Proprietario (
+    NIF VARCHAR(9) PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL,
+    Morada VARCHAR(255) NOT NULL,
+    Data_Nascimento DATE NOT NULL,
+    Sexo CHAR(1) CHECK (Sexo IN ('M', 'F', 'O'))
+);
+
+CREATE TABLE Proprietario_Veiculo (
+    NIF VARCHAR(9) NOT NULL,
+    Matricula VARCHAR(20) NOT NULL,
+    PRIMARY KEY (NIF, Matricula),
+    CONSTRAINT FK_PV_Proprietario FOREIGN KEY (NIF) REFERENCES Proprietario(NIF),
+    CONSTRAINT FK_PV_Veiculo FOREIGN KEY (Matricula) REFERENCES Veiculo(Matricula)
+);
+</pre>
+
+</body>
+</html>
