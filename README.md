@@ -64,6 +64,7 @@ Slides teórico-práticos (TP01 a TP12) e código de apoio:
 Organizados por vertente de avaliação:
 - **`ER/`**:
   - `2022_2023_ER.pdf`: Teste de Modelação Entidade-Relacionamento 2022/2023.
+  - `202324_ER_MC_v1.pdf`: Teste de Modelação Entidade-Relacionamento 2023/2024.
   - `202425_ER_Final.pdf`: Teste de Modelação Entidade-Relacionamento 2024/2025.
 - **`SQL/`**:
   - `201516_LEI_BD_SQL_Teste2_16-12-15.pdf`: Teste 2 de SQL de 2015/2016.
