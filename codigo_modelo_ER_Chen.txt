@@ -1,0 +1,199 @@
+flowchart TD
+    %% =========================================================================
+    %% NOTACAO DE CHEN COMPLETA (EXAME BD 2022/2023 - ISEC)
+    %% =========================================================================
+
+    %% --- FABRICANTE ---
+    E_FAB[FABRICANTE]
+    A_FAB_NIF((<u>NIF</u>)) --- E_FAB
+    A_FAB_NOM((Nome)) --- E_FAB
+    A_FAB_MOR((Morada)) --- E_FAB
+    A_FAB_RUA((Rua)) --- A_FAB_MOR
+    A_FAB_CP((Cod_Postal)) --- A_FAB_MOR
+    A_FAB_CID((Cidade)) --- A_FAB_MOR
+    A_FAB_PAIS((Pais)) --- A_FAB_MOR
+
+    %% --- PRODUTO (Superclasse) ---
+    E_PROD[PRODUTO]
+    A_PR_COD((<u>Codigo</u>)) --- E_PROD
+    A_PR_MAR((Marca)) --- E_PROD
+    A_PR_PRE((Preco)) --- E_PROD
+    A_PR_STK((Qtd_Stock)) --- E_PROD
+    
+    %% Dimensões Compostas
+    A_PR_DIM((Dimensoes)) --- E_PROD
+    A_PR_DIA((Diametro)) --- A_PR_DIM
+    A_PR_LAR((Largura)) --- A_PR_DIM
+    A_PR_ALT((Altura)) --- A_PR_DIM
+
+    %% --- ESPECIALIZACAO / HERANCA (Triangulo Invertido IS A) ---
+    T_ISA[\ IS A <br/> d, t //]
+    E_PROD === T_ISA
+    T_ISA --- E_PNEU[PNEU]
+    T_ISA --- E_JAN[JANTE]
+
+    %% Atributos de PNEU
+    A_PN_VEL((Indice_Velocidade)) --- E_PNEU
+    A_PN_RAS((Rasto)) --- E_PNEU
+    A_PN_TIP((Tipo)) --- E_PNEU
+    A_PN_MOD((Modelo)) --- E_PNEU
+    A_PN_VAL((Validade)) --- E_PNEU
+
+    %% Atributos de JANTE (com Furacao Composta!)
+    A_JA_TIP((Tipo_Jante)) --- E_JAN
+    A_JA_FUR((Furacao)) --- E_JAN
+    A_JA_PAR((Num_Parafusos)) --- A_JA_FUR
+    A_JA_DIS((Distancia_Furos)) --- A_JA_FUR
+
+    %% Compatibilidade Exclusiva Pneu - Jante (1:1)
+    R_EXCL{Compativel}
+    E_PNEU ---|"(0,1)"| R_EXCL
+    R_EXCL ---|"(0,1)"| E_JAN
+
+    %% Fabricante Fabrica Produto (1:N)
+    R_FABRICA{Fabrica}
+    E_FAB ---|"(1,N)"| R_FABRICA
+    R_FABRICA ===|"(1,1)"| E_PROD
+
+    %% --- MODELO VEICULO ---
+    E_MOD[MODELO_VEICULO]
+    A_MD_COD((<u>Cod_Modelo</u>)) --- E_MOD
+    A_MD_DES((Designacao)) --- E_MOD
+    A_MD_MAR((Marca)) --- E_MOD
+
+    %% Recomendacao Produto - Modelo (M:N)
+    R_RECOM{Recomendado}
+    E_PROD ---|"(0,N)"| R_RECOM
+    R_RECOM ---|"(0,N)"| E_MOD
+
+    %% --- VEICULO ---
+    E_VEIC[VEICULO]
+    A_VC_ID((<u>Id_Veiculo</u>)) --- E_VEIC
+    A_VC_MAT((Matricula)) --- E_VEIC
+    A_VC_DAT((Data_Matricula)) --- E_VEIC
+
+    %% Modelo Classifica Veiculo (1:N)
+    R_CLAS{Classifica}
+    E_MOD ---|"(1,N)"| R_CLAS
+    R_CLAS ===|"(1,1)"| E_VEIC
+
+    %% --- CLIENTE ---
+    E_CLI[CLIENTE]
+    A_CL_NIF((<u>NIF</u>)) --- E_CLI
+    A_CL_TEL(((Telefone))) --- E_CLI
+    A_CL_NOM((Nome)) --- E_CLI
+    A_CL_PRP((NProprio)) --- A_CL_NOM
+    A_CL_APL((Apelido)) --- A_CL_NOM
+    A_CL_MOR((Morada)) --- E_CLI
+    A_CL_RUA((Rua)) --- A_CL_MOR
+    A_CL_CP((Cod_Postal)) --- A_CL_MOR
+    A_CL_CID((Cidade)) --- A_CL_MOR
+
+    %% --- FUNCIONARIO ---
+    E_FUNC[FUNCIONARIO]
+    A_FC_NIF((<u>NIF</u>)) --- E_FUNC
+    A_FC_TEL(((Telefone))) --- E_FUNC
+    A_FC_FUN((Funcao)) --- E_FUNC
+    A_FC_SAL((Salario)) --- E_FUNC
+    A_FC_NOM((Nome)) --- E_FUNC
+    A_FC_PRP((NProprio)) --- A_FC_NOM
+    A_FC_APL((Apelido)) --- A_FC_NOM
+    A_FC_MOR((Morada)) --- E_FUNC
+    A_FC_RUA((Rua)) --- A_FC_MOR
+    A_FC_CP((Cod_Postal)) --- A_FC_MOR
+    A_FC_CID((Cidade)) --- A_FC_MOR
+
+    %% --- COMPRA ---
+    E_COMP[COMPRA]
+    A_CP_ID((<u>Id_Compra</u>)) --- E_COMP
+    A_CP_DAT((Data)) --- E_COMP
+    A_CP_TOT(["Total_Produtos"]) --- E_COMP
+    style A_CP_TOT stroke-dasharray: 5 5
+
+    R_CP_FORN{Fornecida_Por}
+    E_COMP ===|"(1,1)"| R_CP_FORN
+    R_CP_FORN ---|"(0,N)"| E_FAB
+
+    R_CP_REG{Regista_Compra}
+    E_COMP ===|"(1,1)"| R_CP_REG
+    R_CP_REG ---|"(0,N)"| E_FUNC
+
+    %% Itens da Compra (M:N com atributos no losango)
+    R_CP_ITENS{Inclui}
+    E_COMP ---|"(1,N)"| R_CP_ITENS
+    R_CP_ITENS ---|"(0,N)"| E_PROD
+    A_IT_QTC((Quantidade)) --- R_CP_ITENS
+    A_IT_PRC((Preco_Compra)) --- R_CP_ITENS
+
+    %% --- VENDA ---
+    E_VEND[VENDA]
+    A_VD_NUM((<u>Num_Fatura</u>)) --- E_VEND
+    A_VD_DAT((Data)) --- E_VEND
+    A_VD_MET((Metodo_Pgm)) --- E_VEND
+    A_VD_TOT(["Total_Pagar"]) --- E_VEND
+    style A_VD_TOT stroke-dasharray: 5 5
+
+    R_VD_CLI{Efetua_Venda}
+    E_CLI ---|"(0,N)"| R_VD_CLI
+    R_VD_CLI ===|"(1,1)"| E_VEND
+
+    R_VD_FUN{Regista_Venda}
+    E_FUNC ---|"(0,N)"| R_VD_FUN
+    R_VD_FUN ===|"(1,1)"| E_VEND
+
+    %% Itens da Venda (M:N com atributos no losango)
+    R_VD_ITENS{Contem}
+    E_VEND ---|"(1,N)"| R_VD_ITENS
+    R_VD_ITENS ---|"(0,N)"| E_PROD
+    A_VD_QTD((Quantidade)) --- R_VD_ITENS
+    A_VD_PRU((Preco_Unit)) --- R_VD_ITENS
+    A_VD_DSC((Desconto)) --- R_VD_ITENS
+
+    %% --- TIPO DE SERVICO ---
+    E_TSERV[TIPO_SERVICO]
+    A_TS_ID((<u>Id_Tipo_Servico</u>)) --- E_TSERV
+    A_TS_DES((Designacao)) --- E_TSERV
+    A_TS_TMP((Tempo_Medio)) --- E_TSERV
+    A_TS_CST((Custo_Hora)) --- E_TSERV
+
+    %% --- REQUISICAO DE SERVICO ---
+    E_REQ[REQUISICAO_SERVICO]
+    A_RQ_NUM((<u>Num_Requisicao</u>)) --- E_REQ
+    A_RQ_DAT((Data_Servico)) --- E_REQ
+    A_RQ_KMS((Kms_Veiculo)) --- E_REQ
+
+    R_RQ_CLI{Requisita}
+    E_CLI ---|"(0,N)"| R_RQ_CLI
+    R_RQ_CLI ===|"(1,1)"| E_REQ
+
+    R_RQ_VEI{Para_Veiculo}
+    E_VEIC ---|"(0,N)"| R_RQ_VEI
+    R_RQ_VEI ===|"(1,1)"| E_REQ
+
+    R_RQ_TIP{Tipo}
+    E_TSERV ---|"(0,N)"| R_RQ_TIP
+    R_RQ_TIP ===|"(1,1)"| E_REQ
+
+    %% Realiza Servico (M:N com atributos no losango)
+    R_EXEC{Realiza}
+    E_REQ ---|"(1,N)"| R_EXEC
+    R_EXEC ---|"(0,N)"| E_FUNC
+    A_EX_INI((Data_Hora_Inicio)) --- R_EXEC
+    A_EX_FIM((Data_Hora_Fim)) --- R_EXEC
+    A_EX_DUR(["Duracao"]) --- R_EXEC
+    style A_EX_DUR stroke-dasharray: 5 5
+
+    %% Responsabilidade (1:1) e Especializacao (M:N)
+    R_RESP{E_Responsavel}
+    E_TSERV ===|"(1,1)"| R_RESP
+    R_RESP ---|"(0,1)"| E_FUNC
+
+    R_ESP{Especializado}
+    E_FUNC ---|"(0,N)"| R_ESP
+    R_ESP ---|"(0,N)"| E_TSERV
+
+    %% Relacionamento Ternario: Preferencia
+    R_PREF{Preferencia}
+    E_FUNC ---|"(0,N)"| R_PREF
+    E_TSERV ---|"(0,N)"| R_PREF
+    E_MOD ---|"(0,N)"| R_PREF
