@@ -11,8 +11,6 @@
 -- as seguintes restrições: O nome e o genero preferido devem ser em maiúsculas;
 -- e o n_contribuinte tem que ter 9 dígitos.
 -- -----------------------------------------------------------------------------
-DROP TABLE AUTORES_BACKUP CASCADE CONSTRAINTS;
-
 CREATE TABLE AUTORES_BACKUP (
     Codigo_Autor     NUMBER(6),
     Nome             VARCHAR2(100) NOT NULL,
@@ -38,8 +36,6 @@ EXEC SQLCHECK('FIMKDSHCMXEHLZV');
 -- avaliarem os livros que esta disponibiliza. A avaliação consistirá na atribuição
 -- de um número de estrelas compreendido entre 1 e 5. Crie a nova tabela AVALIACOES.
 -- -----------------------------------------------------------------------------
-DROP TABLE AVALIACOES CASCADE CONSTRAINTS;
-
 CREATE TABLE AVALIACOES (
     Codigo_Livro   NUMBER(9) NOT NULL,
     Codigo_Cliente NUMBER(6) NOT NULL,
@@ -61,8 +57,6 @@ EXEC SQLCHECK('FIHOBDADOXWUMIK');
 -- Use o comando CREATE TABLE com subconsulta. Na cópia de valores transforme os
 -- géneros dos livros para maiúsculas.
 -- -----------------------------------------------------------------------------
-DROP TABLE LIVROS_BACKUP CASCADE CONSTRAINTS;
-
 CREATE TABLE LIVROS_BACKUP AS
 SELECT
     Codigo_Livro,
@@ -262,8 +256,6 @@ EXEC SQLCHECK('FIFXMNVNPKRRWSE');
 -- Enunciado: Crie uma réplica da tabela EDITORAS, usando o comando CREATE TABLE
 -- com subconsulta, chamando à nova tabela EDITORAS_BACKUP.
 -- -----------------------------------------------------------------------------
-DROP TABLE EDITORAS_BACKUP CASCADE CONSTRAINTS;
-
 CREATE TABLE EDITORAS_BACKUP AS
 SELECT *
 FROM EDITORAS;
@@ -276,7 +268,7 @@ EXEC SQLCHECK('FICEENQOVBIP@YP');
 -- Código: FINGKRDPDFLJAHJ
 -- Enunciado: Apague da base de dados a tabela EDITORAS_BACKUP.
 -- -----------------------------------------------------------------------------
-DROP TABLE EDITORAS_BACKUP CASCADE CONSTRAINTS;
+DROP TABLE EDITORAS_BACKUP;
 
 EXEC SQLCHECK('FINGKRDPDFLJAHJ');
 
@@ -304,8 +296,6 @@ EXEC SQLCHECK('FIUGYBDQVYSOBWK');
 -- Enunciado: Crie a tabela VENDAS_BACKUP, réplica da tabela VENDAS. Use o
 -- comando CREATE TABLE com subconsulta.
 -- -----------------------------------------------------------------------------
-DROP TABLE VENDAS_BACKUP CASCADE CONSTRAINTS;
-
 CREATE TABLE VENDAS_BACKUP AS
 SELECT *
 FROM VENDAS;
@@ -336,8 +326,6 @@ EXEC SQLCHECK('FIJSWHKSFPRCDYL');
 -- Enunciado: Crie a tabela ENCOMENDAS_BACKUP, réplica da tabela ENCOMENDAS.
 -- Use o comando CREATE TABLE com subconsulta.
 -- -----------------------------------------------------------------------------
-DROP TABLE ENCOMENDAS_BACKUP CASCADE CONSTRAINTS;
-
 CREATE TABLE ENCOMENDAS_BACKUP AS
 SELECT *
 FROM ENCOMENDAS;
