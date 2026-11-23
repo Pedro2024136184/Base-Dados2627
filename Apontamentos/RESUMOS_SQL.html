@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumos de SQL - Preparação para Exame (LEI - ISEC)</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #eef2ff;
+            --primary-hover: #4338ca;
+            --text-main: #1f2937;
+            --text-muted: #4b5563;
+            --bg-body: #f9fafb;
+            --bg-card: #ffffff;
+            --border: #e5e7eb;
+            --accent-green: #059669;
+            --accent-green-bg: #ecfdf5;
+            --accent-red: #dc2626;
+            --accent-red-bg: #fef2f2;
+            --accent-amber: #d97706;
+            --accent-amber-bg: #fffbeb;
+            --code-bg: #1e1e2e;
+            --code-text: #cdd6f4;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+        }
+
+        /* Sidebar Navigation */
+        aside.sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: #ffffff;
+            border-right: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            overflow-y: auto;
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.15rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-header p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+
+        nav.toc-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        nav.toc-nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 0.45rem 0.6rem;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+            font-weight: 500;
+        }
+
+        nav.toc-nav a:hover {
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        /* Main Content Container */
+        main.content {
+            flex: 1;
+            padding: 2.5rem 3.5rem;
+            max-width: 1200px;
+            overflow-x: hidden;
+        }
+
+        header.main-header {
+            margin-bottom: 2.5rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 1.5rem;
+        }
+
+        header.main-header h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #111827;
+            letter-spacing: -0.025em;
+        }
+
+        header.main-header p.subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .badge-list {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.65rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        /* Section Cards */
+        section.doc-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        section.doc-section h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        section.doc-section h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #374151;
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        p, ul, ol {
+            margin-bottom: 1rem;
+            color: #374151;
+            font-size: 0.95rem;
+        }
+
+        ul, ol {
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.4rem;
+        }
+
+        /* Callouts / Alerts */
+        .callout {
+            border-left: 4px solid;
+            padding: 1rem 1.25rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.25rem 0;
+            font-size: 0.9rem;
+        }
+
+        .callout.tip {
+            border-color: var(--accent-green);
+            background: var(--accent-green-bg);
+            color: #065f46;
+        }
+
+        .callout.warning {
+            border-color: var(--accent-red);
+            background: var(--accent-red-bg);
+            color: #991b1b;
+        }
+
+        .callout.info {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: #3730a3;
+        }
+
+        .callout strong {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        /* Tables */
+        table.doc-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.25rem 0;
+            font-size: 0.88rem;
+        }
+
+        table.doc-table th, table.doc-table td {
+            border: 1px solid var(--border);
+            padding: 0.65rem 0.85rem;
+            text-align: left;
+        }
+
+        table.doc-table th {
+            background-color: #f3f4f6;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        table.doc-table tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        /* Code Blocks */
+        pre.code-block {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 1.15rem 1.25rem;
+            border-radius: 8px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 0.88rem;
+            overflow-x: auto;
+            margin: 1rem 0 1.25rem 0;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        code.inline {
+            background: #f3f4f6;
+            color: #e11d48;
+            padding: 0.15rem 0.35rem;
+            border-radius: 4px;
+            font-family: ui-monospace, Menlo, monospace;
+            font-size: 0.85em;
+        }
+
+        /* Code Syntax Highlighting Simulation */
+        .kw { color: #f38ba8; font-weight: bold; } /* Keywords (SELECT, FROM, etc.) */
+        .fn { color: #89b4fa; }                    /* Functions (COUNT, SUM, UPPER) */
+        .str { color: #a6e3a1; }                   /* Strings ('...') */
+        .cmt { color: #6c7086; font-style: italic; } /* Comments */
+        .num { color: #fab387; }                   /* Numbers */
+        .ali { color: #f9e2af; }                   /* Aliases ("...") */
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            body { flex-direction: column; }
+            aside.sidebar { width: 100%; height: auto; position: static; }
+            main.content { padding: 1.5rem; }
+        }
+
+        @media print {
+            aside.sidebar { display: none; }
+            main.content { padding: 0; width: 100%; max-width: 100%; }
+            section.doc-section { break-inside: avoid; border: 1px solid #ccc; box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar de Navegação Rápida -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>📚 Guia SQL ISEC</h2>
+            <p>Bases de Dados (LEI)</p>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="quickSearch" placeholder="🔍 Filtrar tópicos (ex: UPDATE, NVL)..." onkeyup="filterTopics()">
+        </div>
+
+        <nav class="toc-nav" id="tocList">
+            <a href="#sec-estrutura">1. Estrutura & Ordem Lógica</a>
+            <a href="#sec-dml">2. DML (INSERT, UPDATE, DELETE)</a>
+            <a href="#sec-ddl">3. DDL (CREATE, ALTER, Restrições)</a>
+            <a href="#sec-joins">4. Junções (JOINs) & Auto-Junções</a>
+            <a href="#sec-agrupamento">5. Agregações & GROUP BY / HAVING</a>
+            <a href="#sec-subqueries">6. Subconsultas & O "Top 1"</a>
+            <a href="#sec-funcoes">7. Funções de Linha (Datas, Texto, NVL)</a>
+            <a href="#sec-transacoes">8. Controlo de Transações</a>
+            <a href="#sec-testes">9. Exercícios Reais de Exame</a>
+            <a href="#sec-mandamentos">10. Os 10 Mandamentos da Correção</a>
+        </nav>
+    </aside>
+
+    <!-- Conteúdo Principal -->
+    <main class="content">
+
+        <header class="main-header">
+            <h1>Manual Completo de Revisões: Oracle SQL</h1>
+            <p class="subtitle">Compilação rigorosa baseada nos slides teórico-práticos (Prof.ª Fernanda Brito Correia) e em todos os testes e exames reais de Bases de Dados do ISEC.</p>
+            <div class="badge-list">
+                <span class="badge">Oracle 11g / 19c / 21c</span>
+                <span class="badge">LEI - DEIS - ISEC</span>
+                <span class="badge">DML & DDL</span>
+                <span class="badge">Subqueries Avançadas</span>
+                <span class="badge">Preparado para Testes</span>
+            </div>
+        </header>
+
+        <!-- SEÇÃO 1: ESTRUTURA E ORDEM LÓGICA -->
+        <section class="doc-section" id="sec-estrutura">
+            <h2>1. Estrutura e Ordem de Execução de uma Query</h2>
+            <p>O maior erro dos alunos nos testes é pensar que o SQL executa pela ordem com que é escrito. O Oracle compila e processa os blocos numa ordem lógica muito específica.</p>
+
+            <table class="doc-table">
+                <thead>
+                    <tr>
+                        <th>Ordem de Escrita no Código</th>
+                        <th>Ordem de Execução pelo Motor Oracle</th>
+                        <th>O que faz nesta fase?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1. <code class="inline">SELECT [DISTINCT]</code></td>
+                        <td><strong>3. WHERE</strong></td>
+                        <td>Filtra linhas individuais <em>antes</em> de agrupar. <strong>Proibido usar agregados!</strong></td>
+                    </tr>
+                    <tr>
+                        <td>2. <code class="inline">FROM ... JOIN ... ON</code></td>
+                        <td><strong>1. FROM + JOIN</strong></td>
+                        <td>Carrega as tabelas e faz os cruzamentos/junções relacionais.</td>
+                    </tr>
+                    <tr>
+                        <td>3. <code class="inline">WHERE</code></td>
+                        <td><strong>2. ON (do JOIN)</strong></td>
+                        <td>Aplica os critérios de junção entre chaves primárias e forasteiras.</td>
+                    </tr>
+                    <tr>
+                        <td>4. <code class="inline">GROUP BY</code></td>
+                        <td><strong>4. GROUP BY</strong></td>
+                        <td>Condensa as linhas individuais em grupos com base nas colunas dadas.</td>
+                    </tr>
+                    <tr>
+                        <td>5. <code class="inline">HAVING</code></td>
+                        <td><strong>5. HAVING</strong></td>
+                        <td>Filtra os grupos com base nos cálculos de grupo (<code class="inline">COUNT</code>, <code class="inline">SUM</code>).</td>
+                    </tr>
+                    <tr>
+                        <td>6. <code class="inline">ORDER BY</code></td>
+                        <td><strong>6. SELECT</strong></td>
+                        <td>Projeta as colunas pedidas e atribui os aliases (<code class="inline">AS "..."</code>).</td>
+                    </tr>
+                    <tr>
+                        <td>-</td>
+                        <td><strong>7. ORDER BY</strong></td>
+                        <td>Ordena a apresentação final das linhas resultantes.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="callout warning">
+                <strong>⚠️ Consequência direta na Correção dos Testes:</strong>
+                Como o <code class="inline">SELECT</code> só executa no <strong>Passo 6</strong>, o Oracle <strong>não conhece aliases</strong> no <code class="inline">WHERE</code>, nem no <code class="inline">GROUP BY</code>, nem no <code class="inline">HAVING</code>! Usar aliases aí dá de imediato o erro <code class="inline">ORA-00904: invalid identifier</code>. Apenas o <code class="inline">ORDER BY</code> permite aliases.
+            </div>
+        </section>
+
+        <!-- SEÇÃO 2: DML COMPLETO -->
+        <section class="doc-section" id="sec-dml">
+            <h2>2. Linguagem de Manipulação de Dados (DML)</h2>
+            <p>A matéria de DML cobre a inserção, modificação e eliminação de tuplos. Nos testes do ISEC, estas perguntas exigem quase sempre o uso de subqueries.</p>
+
+            <h3>A. O Comando INSERT</h3>
+            <p>Adiciona novas linhas a uma tabela. Pode ser feito por valores explícitos ou a partir do resultado de um <code class="inline">SELECT</code>.</p>
+
+            <pre class="code-block"><span class="cmt">-- 1. Inserção simples com listagem explícita de colunas</span>
+<span class="kw">INSERT INTO</span> dep (ndep, nome, loc)
+<span class="kw">VALUES</span> (<span class="num">50</span>, <span class="str">'DESENVOLV'</span>, <span class="str">'DETROIT'</span>);
+
+<span class="cmt">-- 2. Inserção com valores Nulos e Datas (SYSDATE ou TO_DATE)</span>
+<span class="kw">INSERT INTO</span> emp (nemp, nome, funcao, encar, data_entrada, sal, premios, ndep)
+<span class="kw">VALUES</span> (<span class="num">7196</span>, <span class="str">'GREEN'</span>, <span class="str">'VENDEDOR'</span>, <span class="num">7782</span>, <span class="fn">SYSDATE</span>, <span class="num">2000</span>, <span class="kw">NULL</span>, <span class="num">10</span>);
+
+<span class="cmt">-- 3. Inserção a partir de um SELECT (SEM a palavra VALUES!)</span>
+<span class="cmt">-- Exemplo clássico do slide TP10: copiar linhas de uma tabela para outra</span>
+<span class="kw">INSERT INTO</span> gestores (id, nome, salario, data_entrada)
+<span class="kw">SELECT</span> nemp, nome, sal, data_entrada
+<span class="kw">FROM</span>   emp
+<span class="kw">WHERE</span>  funcao = <span class="str">'GESTOR'</span>;
+
+<span class="cmt">-- 4. Inserção com agregação dinâmica (Exemplo do Teste 2023/24 - Pergunta 5)</span>
+<span class="kw">INSERT INTO</span> INVOICE (idInvoice, invoiceDate, fromDate, toDate, value, idContract)
+<span class="kw">SELECT</span> <span class="num">77865</span>,
+       <span class="fn">SYSDATE</span>,
+       <span class="fn">TO_DATE</span>(<span class="str">'01-11-2023'</span>, <span class="str">'DD-MM-YYYY'</span>),
+       <span class="fn">TO_DATE</span>(<span class="str">'30-11-2023'</span>, <span class="str">'DD-MM-YYYY'</span>),
+       <span class="fn">NVL</span>(<span class="fn">SUM</span>(pc.cost), <span class="num">0</span>),
+       <span class="num">9</span>
+<span class="kw">FROM</span> PHONE p
+<span class="kw">JOIN</span> PHONECALL pc <span class="kw">ON</span> p.idPhone = pc.idPhone
+<span class="kw">WHERE</span> p.idContract = <span class="num">9</span>
+  <span class="kw">AND</span> <span class="fn">TO_CHAR</span>(pc.callDate, <span class="str">'MM-YYYY'</span>) = <span class="str">'11-2023'</span>;</pre>
+
+            <h3>B. O Comando UPDATE</h3>
+            <p>Modifica valores de registos existentes. Se omitires o <code class="inline">WHERE</code>, atualiza <strong>todas</strong> as linhas da tabela.</p>
+
+            <pre class="code-block"><span class="cmt">-- 1. Atualização simples com filtro</span>
+<span class="kw">UPDATE</span> emp
+<span class="kw">SET</span>    ndep = <span class="num">20</span>, sal = sal * <span class="num">1.10</span>
+<span class="kw">WHERE</span>  nemp = <span class="num">7782</span>;
+
+<span class="cmt">-- 2. Atualização com Subquery de Várias Colunas (Slide TP10)</span>
+<span class="cmt">-- Atualiza a função e o departamento do 7698 para serem iguais aos do 7499</span>
+<span class="kw">UPDATE</span> emp
+<span class="kw">SET</span>    (funcao, ndep) = (
+    <span class="kw">SELECT</span> funcao, ndep
+    <span class="kw">FROM</span>   emp
+    <span class="kw">WHERE</span>  nemp = <span class="num">7499</span>
+)
+<span class="kw">WHERE</span>  nemp = <span class="num">7698</span>;
+
+<span class="cmt">-- 3. Atualização correlacionada baseada noutra tabela</span>
+<span class="cmt">-- Atualiza o saldo ou resultado após evento de jogo (Teste 2015/16)</span>
+<span class="kw">UPDATE</span> JOGO
+<span class="kw">SET</span>    n_golos_visitante = n_golos_visitante + <span class="num">1</span>
+<span class="kw">WHERE</span>  idjogo = <span class="num">4256</span>;</pre>
+
+            <h3>C. O Comando DELETE</h3>
+            <p>Remove linhas existentes da tabela. Sujeito a restrições de integridade referencial.</p>
+
+            <pre class="code-block"><span class="cmt">-- 1. Eliminação simples de linhas específicas</span>
+<span class="kw">DELETE FROM</span> dep
+<span class="kw">WHERE</span> nome = <span class="str">'DESENV'</span>;
+
+<span class="cmt">-- 2. Eliminação baseada em Subquery noutra tabela (Slide TP10)</span>
+<span class="kw">DELETE FROM</span> emp
+<span class="kw">WHERE</span> ndep = (
+    <span class="kw">SELECT</span> ndep
+    <span class="kw">FROM</span>   dep d
+    <span class="kw">WHERE</span>  d.nome = <span class="str">'VENDAS'</span>
+);
+
+<span class="cmt">-- 3. Exemplo Real de Teste (Exame 2019/2020 - Pergunta 4)</span>
+<span class="cmt">-- Banir jogador 'LandLord' anulando ataques efetuados (idPlayer1) e sofridos (idPlayer2)</span>
+<span class="kw">DELETE FROM</span> PLAYERATTACK
+<span class="kw">WHERE</span> idBattle <span class="kw">IN</span> (
+    <span class="kw">SELECT</span> idBattle
+    <span class="kw">FROM</span>   BATTLE
+    <span class="kw">WHERE</span>  <span class="fn">UPPER</span>(location) = <span class="str">'SOUTH BAY'</span>
+)
+<span class="kw">AND</span> (
+    idPlayer1 = (<span class="kw">SELECT</span> idPlayer <span class="kw">FROM</span> PLAYER <span class="kw">WHERE</span> <span class="fn">UPPER</span>(username) = <span class="str">'LANDLORD'</span>)
+    <span class="kw">OR</span>
+    idPlayer2 = (<span class="kw">SELECT</span> idPlayer <span class="kw">FROM</span> PLAYER <span class="kw">WHERE</span> <span class="fn">UPPER</span>(username) = <span class="str">'LANDLORD'</span>)
+);</pre>
+
+            <div class="callout warning">
+                <strong>⚠️ Erros de Integridade DML que tens de saber reconhecer:</strong>
+                <ul>
+                    <li><code class="inline">ORA-02291: integrity constraint violated - parent key not found</code>: Tentaste inserir ou atualizar uma Foreign Key com um valor que não existe na tabela mãe.</li>
+                    <li><code class="inline">ORA-02292: integrity constraint violated - child record found</code>: Tentaste fazer <code class="inline">DELETE</code> ou alterar uma Primary Key na tabela mãe que tem registos filhos a apontar para ela.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 3: DDL E RESTRIÇÕES -->
+        <section class="doc-section" id="sec-ddl">
+            <h2>3. Linguagem de Definição de Dados (DDL) & Restrições</h2>
+            <p>O teste avalia a capacidade de construir esquemas relacionais íntegros e seguros através de <code class="inline">CREATE TABLE</code> e <code class="inline">ALTER TABLE</code>.</p>
+
+            <h3>A. Tipos de Dados Fundamentais no Oracle</h3>
+            <table class="doc-table">
+                <thead>
+                    <tr><th>Tipo de Dado</th><th>Descrição</th><th>Exemplo Prático</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code class="inline">NUMBER(p, s)</code></td><td>Numérico. <code class="inline">p</code>=precisão total de dígitos, <code class="inline">s</code>=casas decimais.</td><td><code class="inline">NUMBER(7,2)</code> (até 99999.99) ou <code class="inline">NUMBER(4)</code></td></tr>
+                    <tr><td><code class="inline">VARCHAR2(tamanho)</code></td><td>Texto de tamanho variável (até 4000 caracteres).</td><td><code class="inline">VARCHAR2(100)</code></td></tr>
+                    <tr><td><code class="inline">CHAR(tamanho)</code></td><td>Texto de tamanho fixo preenchido com espaços.</td><td><code class="inline">CHAR(1)</code> (ex: género 'M'/'F')</td></tr>
+                    <tr><td><code class="inline">DATE</code></td><td>Data e hora (século, ano, mês, dia, hora, minuto, segundo).</td><td><code class="inline">DATE</code> (ex: '2023-12-13 14:30:00')</td></tr>
+                </tbody>
+            </table>
+
+            <h3>B. Molde Oficial de CREATE TABLE com Restrições (Vale 20%)</h3>
+            <p>Regra da Prof.ª Fernanda: <strong>Dar sempre nomes explícitos</strong> com prefixos padrão (<code class="inline">pk_</code>, <code class="inline">fk_</code>, <code class="inline">ck_</code>, <code class="inline">uk_</code>).</p>
+
+            <pre class="code-block"><span class="kw">CREATE TABLE</span> INVOICE (
+    idInvoice    <span class="kw">NUMBER</span>,
+    invoiceDate  <span class="kw">DATE</span>        <span class="kw">DEFAULT</span> <span class="fn">SYSDATE</span>,
+    fromDate     <span class="kw">DATE</span>        <span class="kw">NOT NULL</span>,
+    toDate       <span class="kw">DATE</span>        <span class="kw">NOT NULL</span>,
+    value        <span class="kw">NUMBER</span>(<span class="num">8</span>,<span class="num">2</span>) <span class="kw">NOT NULL</span>,
+    idContract   <span class="kw">NUMBER</span>      <span class="kw">NOT NULL</span>,
+
+    <span class="cmt">-- 1. Chave Primária</span>
+    <span class="kw">CONSTRAINT</span> pk_invoice <span class="kw">PRIMARY KEY</span> (idInvoice),
+
+    <span class="cmt">-- 2. Chave Forasteira (ligação à tabela mãe CONTRACT)</span>
+    <span class="kw">CONSTRAINT</span> fk_invoice_contract <span class="kw">FOREIGN KEY</span> (idContract) 
+        <span class="kw">REFERENCES</span> CONTRACT (idContract) <span class="cmt">/* ON DELETE CASCADE */</span>,
+
+    <span class="cmt">-- 3. Restrições CHECK (valores não negativos e coerência temporal)</span>
+    <span class="kw">CONSTRAINT</span> ck_invoice_value <span class="kw">CHECK</span> (value >= <span class="num">0</span>),
+    <span class="kw">CONSTRAINT</span> ck_invoice_dates <span class="kw">CHECK</span> (toDate > fromDate),
+    <span class="kw">CONSTRAINT</span> ck_invoice_invdate <span class="kw">CHECK</span> (invoiceDate > toDate)
+);</pre>
+
+            <div class="callout tip">
+                <strong>💡 O que o CHECK NÃO PERMITE (Pergunta de Teórica/Prática):</strong>
+                <ul>
+                    <li>Não permite chamadas a funções variáveis como <code class="inline">SYSDATE</code>, <code class="inline">USER</code> ou <code class="inline">UID</code>.</li>
+                    <li>Não permite subconsultas (<code class="inline">SELECT ...</code>) nem referenciar colunas de outras tabelas.</li>
+                    <li>Não permite pseudocolunas como <code class="inline">ROWNUM</code> ou <code class="inline">CURRVAL</code>.</li>
+                </ul>
+            </div>
+
+            <h3>C. O Comando ALTER TABLE</h3>
+            <p>Quando as tabelas foram criadas sem restrições ou precisam de ser alteradas posteriormente (como no Teste 2019/20 - Pergunta 5):</p>
+
+            <pre class="code-block"><span class="cmt">-- Adicionar múltiplas constraints de uma só vez (OBRIGATÓRIO USAR PARÊNTESES no Oracle!)</span>
+<span class="kw">ALTER TABLE</span> BATTLE <span class="kw">ADD</span> (
+    <span class="kw">CONSTRAINT</span> pk_battle_id     <span class="kw">PRIMARY KEY</span> (idBattle),
+    <span class="kw">CONSTRAINT</span> fk_battle_clan1  <span class="kw">FOREIGN KEY</span> (idClan1) <span class="kw">REFERENCES</span> CLAN (idClan),
+    <span class="kw">CONSTRAINT</span> fk_battle_clan2  <span class="kw">FOREIGN KEY</span> (idClan2) <span class="kw">REFERENCES</span> CLAN (idClan),
+    <span class="kw">CONSTRAINT</span> ck_battle_prize  <span class="kw">CHECK</span> (coinsPrize > <span class="num">0</span>)
+);
+
+<span class="cmt">-- Adicionar NOT NULL (usa-se MODIFY e não ADD)</span>
+<span class="kw">ALTER TABLE</span> emp <span class="kw">MODIFY</span> (sal <span class="kw">NUMBER</span>(<span class="num">7</span>,<span class="num">2</span>) <span class="kw">NOT NULL</span>);
+
+<span class="cmt">-- Remover ou desativar uma restrição</span>
+<span class="kw">ALTER TABLE</span> dep <span class="kw">DROP CONSTRAINT</span> dep_ndep_pk <span class="kw">CASCADE</span>;
+<span class="kw">ALTER TABLE</span> emp <span class="kw">DISABLE CONSTRAINT</span> emp_ndep_fk;</pre>
+
+            <h3>D. Criação de Vistas (CREATE VIEW)</h3>
+            <p>Aparece em testes quando se pede para encapsular uma consulta analítica complexa (Exemplo do Teste 2015/16 - Pergunta 6):</p>
+            <pre class="code-block"><span class="kw">CREATE OR REPLACE VIEW</span> V_CLASSIFICA <span class="kw">AS</span>
+<span class="kw">SELECT</span> competicao AS <span class="ali">"COMPETICAO"</span>,
+       equipa     AS <span class="ali">"EQUIPA"</span>,
+       <span class="fn">SUM</span>(pontos) AS <span class="ali">"N_PONTOS"</span>
+<span class="kw">FROM</span> (
+    <span class="cmt">-- Vitórias em Casa (3 pontos)</span>
+    <span class="kw">SELECT</span> j.competicao, eq.nome AS equipa, <span class="num">3</span> AS pontos
+    <span class="kw">FROM</span> JOGO j <span class="kw">JOIN</span> EQUIPA eq <span class="kw">ON</span> j.id_eq_visitada = eq.id_equipa
+    <span class="kw">WHERE</span> j.n_golos_visitado > j.n_golos_visitante
+    <span class="kw">UNION ALL</span>
+    <span class="cmt">-- Vitórias Fora (3 pontos)</span>
+    <span class="kw">SELECT</span> j.competicao, eq.nome AS equipa, <span class="num">3</span> AS pontos
+    <span class="kw">FROM</span> JOGO j <span class="kw">JOIN</span> EQUIPA eq <span class="kw">ON</span> j.id_eq_visitante = eq.id_equipa
+    <span class="kw">WHERE</span> j.n_golos_visitante > j.n_golos_visitado
+)
+<span class="kw">GROUP BY</span> competicao, equipa
+<span class="kw">ORDER BY</span> competicao, <span class="ali">"N_PONTOS"</span> <span class="kw">DESC</span>;</pre>
+        </section>
+
+        <!-- SEÇÃO 4: JUNÇÕES (JOINS) -->
+        <section class="doc-section" id="sec-joins">
+            <h2>4. Junções de Tabelas (JOINs)</h2>
+            <p>Dominar a ligação entre tabelas é essencial para qualquer consulta relacional.</p>
+
+            <table class="doc-table">
+                <thead>
+                    <tr><th>Tipo de Junção</th><th>Sintaxe Oracle Padrão</th><th>Comportamento</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>INNER JOIN</strong></td><td><code class="inline">FROM T1 JOIN T2 ON T1.id = T2.id</code></td><td>Apenas linhas que têm correspondência em ambas as tabelas.</td></tr>
+                    <tr><td><strong>LEFT OUTER JOIN</strong></td><td><code class="inline">FROM T1 LEFT JOIN T2 ON T1.id = T2.id</code></td><td>Todas as linhas de T1 + correspondências de T2 (preenche com NULL se não houver).</td></tr>
+                    <tr><td><strong>FULL OUTER JOIN</strong></td><td><code class="inline">FROM T1 FULL JOIN T2 ON T1.id = T2.id</code></td><td>Todas as linhas de ambas as tabelas, com NULLs nos pares sem par.</td></tr>
+                    <tr><td><strong>SELF JOIN (Auto-junção)</strong></td><td><code class="inline">FROM PLAYER ME JOIN PLAYER P ON ...</code></td><td>A tabela junta-se consigo mesma usando aliases diferentes (atacante vs atacado).</td></tr>
+                </tbody>
+            </table>
+
+            <pre class="code-block"><span class="cmt">-- Auto-Junção Real (Teste 2019/20 - Pergunta 1)</span>
+<span class="cmt">-- O jogador 'Scar Face' lutou contra outro jogador (P) da mesma região</span>
+<span class="kw">SELECT</span> p_adv_clan.name <span class="kw">AS</span> <span class="ali">"Clã Adversário"</span>,
+       b.location      <span class="kw">AS</span> <span class="ali">"Local da batalha"</span>,
+       b.battleDate    <span class="kw">AS</span> <span class="ali">"Data da batalha"</span>
+<span class="kw">FROM</span> BATTLE b
+<span class="kw">JOIN</span> PLAYERATTACK pa <span class="kw">ON</span> b.idBattle = pa.idBattle
+<span class="kw">JOIN</span> PLAYER me       <span class="kw">ON</span> (pa.idPlayer1 = me.idPlayer <span class="kw">OR</span> pa.idPlayer2 = me.idPlayer)
+<span class="kw">JOIN</span> PLAYER p_adv    <span class="kw">ON</span> (pa.idPlayer1 = p_adv.idPlayer <span class="kw">OR</span> pa.idPlayer2 = p_adv.idPlayer)
+<span class="kw">JOIN</span> CLAN p_adv_clan <span class="kw">ON</span> p_adv.idClan = p_adv_clan.idClan
+<span class="kw">WHERE</span> <span class="fn">UPPER</span>(me.username) = <span class="str">'SCAR FACE'</span>
+  <span class="kw">AND</span> me.idPlayer != p_adv.idPlayer
+  <span class="kw">AND</span> p_adv.region = me.region
+  <span class="kw">AND</span> <span class="fn">TO_CHAR</span>(b.battleDate, <span class="str">'YYYY'</span>) = <span class="str">'2019'</span>
+<span class="kw">ORDER BY</span> b.battleDate <span class="kw">DESC</span>;</pre>
+        </section>
+
+        <!-- SEÇÃO 5: AGREGAÇÕES E GROUP BY -->
+        <section class="doc-section" id="sec-agrupamento">
+            <h2>5. Agregações & GROUP BY / HAVING</h2>
+            <p>As funções de grupo operam sobre conjuntos de linhas para produzir um único resultado por grupo.</p>
+
+            <h3>As 5 Funções de Grupo Fundamentais</h3>
+            <ul>
+                <li><code class="inline">COUNT(*)</code>: Conta todas as linhas resultantes (incluindo nulos).</li>
+                <li><code class="inline">COUNT(coluna)</code>: Conta apenas linhas onde a coluna <strong>não é nula</strong>.</li>
+                <li><code class="inline">COUNT(DISTINCT coluna)</code>: Conta valores únicos sem repetições.</li>
+                <li><code class="inline">SUM(coluna)</code>: Soma os valores (ignora nulos; dá NULL se o grupo estiver vazio).</li>
+                <li><code class="inline">AVG(coluna)</code>: Média aritmética (ignora nulos).</li>
+                <li><code class="inline">MAX(coluna)</code> / <code class="inline">MIN(coluna)</code>: Maior e menor valor (numérico, texto ou data).</li>
+            </ul>
+
+            <h3>Regras Inquebráveis de Exame</h3>
+            <div class="callout warning">
+                <strong>1. Regra de Ouro do SELECT vs GROUP BY:</strong>
+                Se usares funções agregadas, <strong>todas as outras colunas que estejam no SELECT têm obrigatoriamente de estar no GROUP BY</strong>. Caso contrário: <code class="inline">ORA-00937: not a single-group group function</code>.
+            </div>
+
+            <div class="callout warning">
+                <strong>2. Regra de Ouro do WHERE vs HAVING:</strong>
+                <code class="inline">WHERE</code> filtra linhas <em>individuais</em> (antes do agrupamento). <code class="inline">HAVING</code> filtra os <em>grupos</em> resultantes. <strong>Nunca coloques <code class="inline">COUNT</code> ou <code class="inline">SUM</code> dentro do <code class="inline">WHERE</code>!</strong>
+            </div>
+
+            <pre class="code-block"><span class="cmt">-- Exemplo Canónico (Teste 2023/24 - Pergunta 2)</span>
+<span class="kw">SELECT</span> c.name                          <span class="kw">AS</span> <span class="ali">"Nome Cliente"</span>,
+       <span class="fn">TO_CHAR</span>(pc.callDate, <span class="str">'YYYY-MM'</span>) <span class="kw">AS</span> <span class="ali">"ANO_MES"</span>,
+       <span class="fn">COUNT</span>(*)                        <span class="kw">AS</span> <span class="ali">"NUM_CHAMADAS"</span>,
+       <span class="fn">SUM</span>(pc.duration)                <span class="kw">AS</span> <span class="ali">"NUM_TOTAL_MINUTOS"</span>
+<span class="kw">FROM</span> CONTRACT c
+<span class="kw">JOIN</span> PHONE p       <span class="kw">ON</span> c.idContract = p.idContract
+<span class="kw">JOIN</span> PHONECALL pc  <span class="kw">ON</span> p.idPhone = pc.idPhone
+<span class="kw">WHERE</span> <span class="fn">TO_CHAR</span>(c.startDate, <span class="str">'YYYY'</span>) = <span class="str">'2022'</span>
+  <span class="kw">AND</span> <span class="fn">TO_CHAR</span>(pc.callDate, <span class="str">'YYYY'</span>) = <span class="str">'2022'</span>
+  <span class="kw">AND</span> pc.duration > <span class="num">2</span>
+<span class="kw">GROUP BY</span> c.name, <span class="fn">TO_CHAR</span>(pc.callDate, <span class="str">'YYYY-MM'</span>)
+<span class="kw">HAVING</span> <span class="fn">COUNT</span>(*) >= <span class="num">5</span> 
+   <span class="kw">AND</span> <span class="fn">SUM</span>(pc.duration) >= <span class="num">100</span>
+<span class="kw">ORDER BY</span> <span class="ali">"NUM_CHAMADAS"</span> <span class="kw">DESC</span>, <span class="ali">"NUM_TOTAL_MINUTOS"</span> <span class="kw">ASC</span>;</pre>
+        </section>
+
+        <!-- SEÇÃO 6: SUBCONSULTAS E O MÁXIMO POR GRUPO -->
+        <section class="doc-section" id="sec-subqueries">
+            <h2>6. Subconsultas & A Receita do "Top 1 / Máximo por Grupo"</h2>
+            <p>Subconsultas são consultas aninhadas dentro de outro comando SQL. Podem devolver um único valor (escalar), uma lista de valores (múltiplas linhas) ou múltiplas colunas.</p>
+
+            <h3>A. Operadores de Múltiplas Linhas: IN, ANY, ALL</h3>
+            <ul>
+                <li><code class="inline">IN</code>: Igual a qualquer elemento da lista devolvida.</li>
+                <li><code class="inline">&gt; ALL (...)</code>: Maior do que <strong>todos</strong> os elementos (isto é, maior que o máximo da lista).</li>
+                <li><code class="inline">&lt;= ALL (...)</code>: Menor ou igual a <strong>todos</strong> os elementos (isto é, o menor/mínimo da lista).</li>
+                <li><code class="inline">&gt; ANY (...)</code>: Maior do que <strong>pelo menos um</strong> dos elementos (isto é, maior que o mínimo da lista).</li>
+            </ul>
+
+            <h3>B. A Receita de Ouro do ISEC: "O Maior de Cada Grupo" (>= ALL)</h3>
+            <p>Aparece em quase todos os testes (ex: "destino com mais chamadas", "melhor marcador de cada equipa", "livro mais vendido por editora").</p>
+
+            <div class="callout tip">
+                <strong>📋 Memoriza esta Receita Universal:</strong>
+                <pre class="code-block"><span class="kw">SELECT</span> GrupoA, DetalheB
+<span class="kw">FROM</span>   Tabelas
+<span class="kw">WHERE</span>  Filtros_Gerais
+<span class="kw">GROUP BY</span> GrupoA, DetalheB
+<span class="kw">HAVING COUNT</span>(*) >= <span class="kw">ALL</span> (
+    <span class="cmt">-- Subquery que calcula as contagens DESTE MESMO grupo GrupoA</span>
+    <span class="kw">SELECT COUNT</span>(*)
+    <span class="kw">FROM</span>   Tabelas_Sub
+    <span class="kw">WHERE</span>  Tabelas_Sub.GrupoA = Tabelas.GrupoA <span class="cmt">/* Correlação com o pai! */</span>
+      <span class="kw">AND</span>  Filtros_Gerais
+    <span class="kw">GROUP BY</span> Tabelas_Sub.DetalheB
+);</pre>
+            </div>
+
+            <pre class="code-block"><span class="cmt">-- Exemplo Aplicado Real: Melhor Marcador de Cada Equipa (Teste 2015/16 - Pergunta 4)</span>
+<span class="kw">SELECT</span> eq.nome   <span class="kw">AS</span> <span class="ali">"EQUIPA"</span>,
+       jog.nome  <span class="kw">AS</span> <span class="ali">"NOME"</span>
+<span class="kw">FROM</span> EQUIPA eq
+<span class="kw">JOIN</span> JOGADOR jog <span class="kw">ON</span> eq.id_equipa = jog.id_equipa
+<span class="kw">JOIN</span> EVENTO ev   <span class="kw">ON</span> jog.id_jogador = ev.id_jogador
+<span class="kw">WHERE</span> <span class="fn">UPPER</span>(ev.tipo_evento) = <span class="str">'GOLO'</span>
+<span class="kw">GROUP BY</span> eq.id_equipa, eq.nome, jog.id_jogador, jog.nome
+<span class="kw">HAVING COUNT</span>(*) >= <span class="kw">ALL</span> (
+    <span class="kw">SELECT COUNT</span>(*)
+    <span class="kw">FROM</span> JOGADOR jog2
+    <span class="kw">JOIN</span> EVENTO ev2 <span class="kw">ON</span> jog2.id_jogador = ev2.id_jogador
+    <span class="kw">WHERE</span> jog2.id_equipa = eq.id_equipa <span class="cmt">-- Mesmo clube</span>
+      <span class="kw">AND</span> <span class="fn">UPPER</span>(ev2.tipo_evento) = <span class="str">'GOLO'</span>
+    <span class="kw">GROUP BY</span> jog2.id_jogador
+);</pre>
+        </section>
+
+        <!-- SEÇÃO 7: FUNÇÕES DE LINHA -->
+        <section class="doc-section" id="sec-funcoes">
+            <h2>7. Funções de Linha (Datas, Texto, Conversão e NVL)</h2>
+            <p>Operam sobre valores individuais de cada linha. Essenciais nos filtros do <code class="inline">WHERE</code> e na formatação das projeções do <code class="inline">SELECT</code>.</p>
+
+            <h3>A. A Função Salvador: NVL</h3>
+            <p>Substitui valores <code class="inline">NULL</code> por um valor predefinido. <strong>Lembrete: Qualquer operação aritmética com NULL resulta em NULL!</strong></p>
+            <pre class="code-block"><span class="cmt">-- Salário total: se comissao for NULL, soma 0 em vez de anular o salário</span>
+<span class="kw">SELECT</span> nome, sal + <span class="fn">NVL</span>(comissao, <span class="num">0</span>) <span class="kw">AS</span> <span class="ali">"Total Recebido"</span> <span class="kw">FROM</span> emp;
+
+<span class="cmt">-- Em agregações para tabelas externas que possam não ter linhas:</span>
+<span class="fn">NVL</span>(<span class="fn">SUM</span>(pc.cost), <span class="num">0</span>)</pre>
+
+            <h3>B. Manipulação de Datas em Oracle</h3>
+            <table class="doc-table">
+                <thead>
+                    <tr><th>Necessidade de Exame</th><th>Sintaxe Correta Oracle</th><th>O que NÃO fazer (Erros)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Data atual do sistema</td><td><code class="inline">SYSDATE</code></td><td><code class="inline">NOW()</code> ou <code class="inline">CURRENT_DATE()</code> (MySQL)</td></tr>
+                    <tr><td>Filtrar por Ano (ex: 2022)</td><td><code class="inline">TO_CHAR(data, 'YYYY') = '2022'</code></td><td>Comparar strings sem converter</td></tr>
+                    <tr><td>Filtrar por Mês e Ano</td><td><code class="inline">TO_CHAR(data, 'MM-YYYY') = '11-2023'</code></td><td>Comparar apenas o mês e esquecer o ano</td></tr>
+                    <tr><td>Horas do dia (ex: após as 20h)</td><td><code class="inline">TO_CHAR(data, 'HH24') >= '20'</code></td><td>Tentar usar funções não standard</td></tr>
+                    <tr><td>Primeiro dia do mês passado</td><td><code class="inline">TRUNC(ADD_MONTHS(SYSDATE, -1), 'MM')</code></td><td>Subtrair 30 dias</td></tr>
+                    <tr><td>Último dia do mês passado</td><td><code class="inline">LAST_DAY(ADD_MONTHS(SYSDATE, -1))</code></td><td>Assumir sempre 30 ou 31 dias</td></tr>
+                </tbody>
+            </table>
+
+            <h3>C. Texto e Strings</h3>
+            <ul>
+                <li><code class="inline">UPPER(campo)</code> / <code class="inline">LOWER(campo)</code>: Converte para maiúsculas/minúsculas. <strong>Obrigatório</strong> quando o enunciado diz que os textos não têm formato padronizado.</li>
+                <li><code class="inline">LIKE '%COIMBRA%'</code>: Procura padrões. <code class="inline">%</code> representa 0 ou mais caracteres; <code class="inline">_</code> representa exatamente 1 caractere.</li>
+                <li><code class="inline">SUBSTR(string, inicio, tamanho)</code>: Extrai parte de um texto.</li>
+                <li><code class="inline">INSTR(string, padrao)</code>: Devolve a posição numérica onde o padrão ocorre.</li>
+            </ul>
+        </section>
+
+        <!-- SEÇÃO 8: CONTROLO DE TRANSAÇÕES -->
+        <section class="doc-section" id="sec-transacoes">
+            <h2>8. Controlo de Transações (TCL)</h2>
+            <p>Uma transação SQL é uma unidade lógica de trabalho composta por um conjunto de instruções DML executadas sequencialmente.</p>
+
+            <table class="doc-table">
+                <thead>
+                    <tr><th>Comando</th><th>Efeito na Base de Dados</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code class="inline">COMMIT;</code></td><td>Grava permanentemente todas as alterações pendentes da sessão no disco. Torna as alterações visíveis aos outros utilizadores e liberta bloqueios de linhas.</td></tr>
+                    <tr><td><code class="inline">ROLLBACK;</code></td><td>Descarta todas as alterações pendentes, restaurando a base de dados para o estado do último COMMIT.</td></tr>
+                    <tr><td><code class="inline">SAVEPOINT nome;</code></td><td>Cria um ponto de salvaguarda intermediário dentro da transação em curso.</td></tr>
+                    <tr><td><code class="inline">ROLLBACK TO nome;</code></td><td>Reverte as alterações feitas apenas após o ponto de salvaguarda indicado, mantendo as anteriores ativas.</td></tr>
+                </tbody>
+            </table>
+
+            <div class="callout info">
+                <strong>📌 Commit Implícito em Oracle:</strong>
+                Sempre que executas qualquer instrução <strong>DDL</strong> (<code class="inline">CREATE</code>, <code class="inline">ALTER</code>, <code class="inline">DROP</code>, <code class="inline">TRUNCATE</code>), o Oracle efetua automaticamente um <strong>COMMIT implícito</strong> antes e depois da instrução!
+            </div>
+        </section>
+
+        <!-- SEÇÃO 9: EXERCÍCIOS REAIS DE EXAME RESOLVIDOS -->
+        <section class="doc-section" id="sec-testes">
+            <h2>9. Banco de Casos Reais: Resoluções de Testes Anteriores</h2>
+
+            <h3>Caso 1: Teste 2023/2024 — Pergunta 1 (Junções + Strings + Subquery IN)</h3>
+            <p><em>Enunciado: Clientes residentes em Coimbra com contrato que ligaram para o José Gonçalves no mês passado com chamadas > 2 min.</em></p>
+            <pre class="code-block"><span class="kw">SELECT</span> c.name             <span class="kw">AS</span> <span class="ali">"Nome Cliente"</span>,
+       c.nif              <span class="kw">AS</span> <span class="ali">"Nif"</span>,
+       p.phoneNumber      <span class="kw">AS</span> <span class="ali">"PHONENUMBER"</span>,
+       pc.destPhoneNumber <span class="kw">AS</span> <span class="ali">"DESTPHONENUMBER"</span>
+<span class="kw">FROM</span> contract c
+<span class="kw">JOIN</span> phone p       <span class="kw">ON</span> c.idContract = p.idContract
+<span class="kw">JOIN</span> phonecall pc  <span class="kw">ON</span> p.idPhone = pc.idPhone
+<span class="kw">WHERE</span> <span class="fn">UPPER</span>(c.address) <span class="kw">LIKE</span> <span class="str">'%COIMBRA%'</span>
+  <span class="kw">AND</span> pc.duration > <span class="num">2</span>
+  <span class="kw">AND</span> <span class="fn">TO_CHAR</span>(pc.callDate, <span class="str">'MM-YYYY'</span>) = <span class="str">'11-2023'</span>
+  <span class="kw">AND</span> pc.destPhoneNumber <span class="kw">IN</span> (
+      <span class="kw">SELECT</span> p2.phoneNumber
+      <span class="kw">FROM</span> phone p2
+      <span class="kw">JOIN</span> contract c2 <span class="kw">ON</span> p2.idContract = c2.idContract
+      <span class="kw">WHERE</span> <span class="fn">UPPER</span>(c2.name) = <span class="str">'JOSÉ GONÇALVES'</span>
+  )
+<span class="kw">ORDER BY</span> c.name <span class="kw">ASC</span>;</pre>
+
+            <h3>Caso 2: Teste 2019/2020 — Pergunta 3 (Subquery de Dano Mínimo Sofrido)</h3>
+            <p><em>Enunciado: Qual o jogador do clã 'The Vikings' em que o total de dano sofrido (healthRemoved) na batalha de 'Joshua Hill' foi menor?</em></p>
+            <pre class="code-block"><span class="kw">SELECT</span> pl.username <span class="kw">AS</span> <span class="ali">"Nome do Jogador"</span>
+<span class="kw">FROM</span> PLAYER pl
+<span class="kw">JOIN</span> CLAN c          <span class="kw">ON</span> pl.idClan = c.idClan
+<span class="kw">JOIN</span> PLAYERATTACK pa <span class="kw">ON</span> pl.idPlayer = pa.idPlayer2 <span class="cmt">-- idPlayer2 = atacado/sofreu</span>
+<span class="kw">JOIN</span> BATTLE b        <span class="kw">ON</span> pa.idBattle = b.idBattle
+<span class="kw">WHERE</span> <span class="fn">UPPER</span>(c.name) = <span class="str">'THE VIKINGS'</span>
+  <span class="kw">AND</span> <span class="fn">UPPER</span>(b.location) = <span class="str">'JOSHUA HILL'</span>
+<span class="kw">GROUP BY</span> pl.idPlayer, pl.username
+<span class="kw">HAVING SUM</span>(pa.healthRemoved) &lt;= <span class="kw">ALL</span> (
+    <span class="kw">SELECT SUM</span>(pa2.healthRemoved)
+    <span class="kw">FROM</span> PLAYER pl2
+    <span class="kw">JOIN</span> CLAN c2          <span class="kw">ON</span> pl2.idClan = c2.idClan
+    <span class="kw">JOIN</span> PLAYERATTACK pa2 <span class="kw">ON</span> pl2.idPlayer = pa2.idPlayer2
+    <span class="kw">JOIN</span> BATTLE b2        <span class="kw">ON</span> pa2.idBattle = b2.idBattle
+    <span class="kw">WHERE</span> <span class="fn">UPPER</span>(c2.name) = <span class="str">'THE VIKINGS'</span>
+      <span class="kw">AND</span> <span class="fn">UPPER</span>(b2.location) = <span class="str">'JOSHUA HILL'</span>
+    <span class="kw">GROUP BY</span> pl2.idPlayer
+);</pre>
+
+            <h3>Caso 3: Teste 2015/2016 — Pergunta 1 (CREATE TABLE com Restrições)</h3>
+            <p><em>Enunciado: Crie a tabela EVENTO com PK, FKs e restrição de minuto_jogo não negativo.</em></p>
+            <pre class="code-block"><span class="kw">CREATE TABLE</span> EVENTO (
+    id_evento    <span class="kw">NUMBER</span>,
+    id_jogo      <span class="kw">NUMBER</span>        <span class="kw">NOT NULL</span>,
+    id_jogador   <span class="kw">NUMBER</span>        <span class="kw">NOT NULL</span>,
+    minuto_jogo  <span class="kw">NUMBER</span>        <span class="kw">NOT NULL</span>,
+    tipo_evento  <span class="kw">VARCHAR2</span>(<span class="num">30</span>)  <span class="kw">NOT NULL</span>,
+    comentario   <span class="kw">VARCHAR2</span>(<span class="num">200</span>),
+
+    <span class="kw">CONSTRAINT</span> pk_evento          <span class="kw">PRIMARY KEY</span> (id_evento),
+    <span class="kw">CONSTRAINT</span> fk_evento_jogo     <span class="kw">FOREIGN KEY</span> (id_jogo) <span class="kw">REFERENCES</span> JOGO (idjogo),
+    <span class="kw">CONSTRAINT</span> fk_evento_jogador  <span class="kw">FOREIGN KEY</span> (id_jogador) <span class="kw">REFERENCES</span> JOGADOR (id_jogador),
+    <span class="kw">CONSTRAINT</span> ck_evento_minuto   <span class="kw">CHECK</span> (minuto_jogo >= <span class="num">0</span>)
+);</pre>
+        </section>
+
+        <!-- SEÇÃO 10: OS 10 MANDAMENTOS -->
+        <section class="doc-section" id="sec-mandamentos">
+            <h2>10. Checklist de Exame: Os 10 Mandamentos do ISEC</h2>
+            <div class="callout warning">
+                <strong>🚨 O Que a Professora Desconta Automaticamente:</strong>
+                <ol>
+                    <li><strong>Esquecer o UPPER/LOWER:</strong> Se comparas texto puro sem <code class="inline">UPPER()</code> quando o enunciado avisa que não há formato, descontas logo.</li>
+                    <li><strong>Aspas Erradas:</strong> Aspas simples <code class="inline">'...'</code> são apenas para texto/datas literais. Aspas duplas <code class="inline">"..."</code> são apenas para cabeçalhos de colunas (aliases).</li>
+                    <li><strong>Agregações no WHERE:</strong> Nunca coloques <code class="inline">COUNT()</code> ou <code class="inline">SUM()</code> dentro do <code class="inline">WHERE</code>. O sítio das agregações é no <code class="inline">HAVING</code>.</li>
+                    <li><strong>Coluna fora do GROUP BY:</strong> Qualquer coluna no <code class="inline">SELECT</code> que não seja agregação tem de ir para o <code class="inline">GROUP BY</code>.</li>
+                    <li><strong>Aliases no WHERE / GROUP BY:</strong> Nunca uses os nomes criados com <code class="inline">AS "..."</code> dentro de filtros ou agrupamentos. Repete a expressão completa.</li>
+                    <li><strong>Nomes das Restrições:</strong> Em DDL, nunca cries constraints sem nome. Usa sempre <code class="inline">CONSTRAINT pk_...</code>, <code class="inline">CONSTRAINT fk_...</code>, etc.</li>
+                    <li><strong>Parênteses em Constraints:</strong> Escrever <code class="inline">PRIMARY KEY id</code> em vez de <code class="inline">PRIMARY KEY (id)</code> dá erro imediato de compilação.</li>
+                    <li><strong>A Palavra REFERENCES:</strong> Em chaves forasteiras escreve-se <code class="inline">REFERENCES tabela (coluna)</code> e nunca <code class="inline">ON tabela.coluna</code>.</li>
+                    <li><strong>Proteção contra Nulos:</strong> Em faturas, cálculos ou somas que possam vir vazias, aplica sempre <code class="inline">NVL(SUM(...), 0)</code>.</li>
+                    <li><strong>Inversão de Lógica Booleana:</strong> "Excluir se A &lt; 5 OU B &lt; 100" significa no <code class="inline">HAVING</code>: <code class="inline">A >= 5 AND B >= 100</code> (Lei de De Morgan).</li>
+                </ol>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Script de Busca Rápida -->
+    <script>
+        function filterTopics() {
+            const input = document.getElementById('quickSearch').value.toLowerCase();
+            const sections = document.querySelectorAll('section.doc-section');
+            const navLinks = document.querySelectorAll('#tocList a');
+
+            sections.forEach((sec, idx) => {
+                const text = sec.innerText.toLowerCase();
+                if (text.includes(input)) {
+                    sec.style.display = 'block';
+                    if (navLinks[idx]) navLinks[idx].style.display = 'block';
+                } else {
+                    sec.style.display = 'none';
+                    if (navLinks[idx]) navLinks[idx].style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
