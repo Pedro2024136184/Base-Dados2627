@@ -392,6 +392,13 @@
                 <strong>⚠️ Consequência direta na Correção dos Testes:</strong>
                 Como o <code class="inline">SELECT</code> só executa no <strong>Passo 6</strong>, o Oracle <strong>não conhece aliases</strong> no <code class="inline">WHERE</code>, nem no <code class="inline">GROUP BY</code>, nem no <code class="inline">HAVING</code>! Usar aliases aí dá de imediato o erro <code class="inline">ORA-00904: invalid identifier</code>. Apenas o <code class="inline">ORDER BY</code> permite aliases.
             </div>
+
+            <h3>A Cláusula DISTINCT: Eliminar Duplicados</h3>
+            <p>O <code class="inline">DISTINCT</code> é exigido sempre que o enunciado pede para listar entidades (clientes, cidades, veículos) que realizaram múltiplos movimentos e que, devido aos <code class="inline">JOIN</code>s, apareceriam repetidos no ecrã.</p>
+            <ul>
+                <li><strong>No SELECT:</strong> <code class="inline">SELECT DISTINCT c.name, c.birthDate FROM ...</code> garante que cada tuplo do resultado é único.</li>
+                <li><strong>Nas Agregações:</strong> <code class="inline">COUNT(DISTINCT c.idClient)</code> conta entidades <em>diferentes</em>, ao contrário de <code class="inline">COUNT(c.idClient)</code> que conta o total de linhas.</li>
+            </ul>
         </section>
 
         <!-- SEÇÃO 2: DML COMPLETO -->
